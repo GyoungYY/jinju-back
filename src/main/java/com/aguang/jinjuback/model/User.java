@@ -19,6 +19,7 @@ public class User {
 
     private String address;
 
+    @JSONField(serialize = false)
     private int enabled;
 
     private Long createTime;

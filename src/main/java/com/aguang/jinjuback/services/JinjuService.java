@@ -36,15 +36,15 @@ public class JinjuService {
     public Result createJinju(Jinju jinju, Integer userId) {
         Result result = new Result();
         try {
-            Long currentTimeForInt = DateUtils.getCurrentTimeForInt();
+            Long currentTime = DateUtils.getCurrentTime();
 
             jinju.setUserId(userId);
             jinju.setUpVoteCount(0);
             jinju.setDownVoteCount(0);
             jinju.setCollectCount(0);
             jinju.setCommentCount(0);
-            jinju.setCreateTime(currentTimeForInt);
-            jinju.setUpdateTime(currentTimeForInt);
+            jinju.setCreateTime(currentTime);
+            jinju.setUpdateTime(currentTime);
             jinju.setIsDelete(IsDeleteConstant.UN_DELETE);
 
             jinjuDao.createJinju(jinju);
@@ -126,7 +126,7 @@ public class JinjuService {
                 }
 
                 // 创建赞
-                jinjuDao.createVote(jijuId, userId, VoteConstant.UP, DateUtils.getCurrentTimeForInt());
+                jinjuDao.createVote(jijuId, userId, VoteConstant.UP, DateUtils.getCurrentTime());
                 jinjuDao.increaseUpVote(jijuId);
 
             }
@@ -177,7 +177,7 @@ public class JinjuService {
                 }
 
                 // 创建踩
-                jinjuDao.createVote(jijuId, userId, VoteConstant.DOWN, DateUtils.getCurrentTimeForInt());
+                jinjuDao.createVote(jijuId, userId, VoteConstant.DOWN, DateUtils.getCurrentTime());
                 jinjuDao.increaseDownVote(jijuId);
 
             }
@@ -222,7 +222,7 @@ public class JinjuService {
             if(ConfirmOrCalcelConstant.CONFIRM.equals(type)) {
 
                 // 创建收藏
-                jinjuDao.createCollect(jijuId, userId, 1,DateUtils.getCurrentTimeForInt());
+                jinjuDao.createCollect(jijuId, userId, 1,DateUtils.getCurrentTime());
                 jinjuDao.increaseCollect(jijuId);
             }
             // 2:取消收藏
