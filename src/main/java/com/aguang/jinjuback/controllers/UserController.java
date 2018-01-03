@@ -43,7 +43,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public Result login(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
         Result result = userService.login(username, password);
         if(Result.OK.equals(result.getCode())) {
@@ -57,7 +57,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @GetMapping("/update")
+    @PostMapping("/update")
     public Result updateUser(@RequestBody User user){
         return userService.updateUser(user);
     }
@@ -67,7 +67,7 @@ public class UserController {
      * @param id
      * @return
      */
-    @GetMapping("/logout/{id}")
+    @PostMapping("/logout/{id}")
     public Result logout(@PathVariable("id") Integer id, HttpServletRequest request) {
         Result result = new Result();
 
