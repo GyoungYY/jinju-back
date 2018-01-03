@@ -89,7 +89,7 @@ public class UserService {
 
         // 判断用户名是否与别人重复
         User userInfo2 = userDao.getUserByUsername(userInfo.getUsername());
-        if(userInfo2 != null && (userInfo2.getUserId() != userInfo.getUserId())){
+        if (userInfo2 != null && (!userInfo2.getUserId().equals(userInfo.getUserId()))) {
             result.setError(null, "该用户名已存在，不要与别人一样哦~");
             return result;
         }
