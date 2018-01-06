@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.controllers;
 
+import com.aguang.jinjuback.model.Comment;
 import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
@@ -79,5 +80,33 @@ public class JinjuController extends BaseController {
     @PostMapping("/collect/{jijuId}")
     public Result collect(@PathVariable("jijuId") Integer jijuId, @RequestParam("type") String type) {
         return jinjuService.collect(jijuId, type, getUserId());
+    }
+
+
+    /**
+     * 创建评论
+     * @return
+     */
+    @PostMapping("/comment/create")
+    public Result createComment(@RequestBody  @Valid Comment comment, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Result result = new Result();
+            result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return result;
+        }
+        return jinjuService.createComment(comment, getUserId());
+    }
+
+    /**
+     * 获取评论列表
+     * @return
+     */
+    @GetMapping("/comment/list")
+    public Result listComment(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex,
+                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                              @RequestParam("jinjuId") Integer jinjuId,
+                              @RequestParam(value = "parentId", required = false) Integer parentId) {
+
+        return jinjuService.listComment(jinjuId, parentId, pageIndex, pageSize);
     }
 }

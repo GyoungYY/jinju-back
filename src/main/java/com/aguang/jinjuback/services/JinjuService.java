@@ -2,6 +2,7 @@ package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.configuration.CustomException;
 import com.aguang.jinjuback.dao.JinjuDao;
+import com.aguang.jinjuback.model.Comment;
 import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
@@ -128,7 +129,6 @@ public class JinjuService {
                 // 创建赞
                 jinjuDao.createVote(jijuId, userId, VoteConstant.UP, DateUtils.getCurrentTime());
                 jinjuDao.increaseUpVote(jijuId);
-
             }
             // 2:取消赞
             else if(ConfirmOrCalcelConstant.CALCEL.equals(type)) {
@@ -249,4 +249,87 @@ public class JinjuService {
         return result;
     }
 
+    /**
+     * 创建评论
+     * @param comment
+     * @return
+     */
+    @Transactional
+    public Result createComment(Comment comment, Integer userId) {
+
+        Result result = new Result();
+        try {
+
+            comment.setUpVoteCount(0);
+            comment.setDownVoteCount(0);
+            comment.setCommentCount(0);
+            comment.setUserId(userId);
+            comment.setCreateTime(DateUtils.getCurrentTime());
+
+            // 如果ParentId为空，则代表的是一级评论，将ParentId设置为0
+            if(comment.getParentId()==null || comment.getParentId().equals(0)) {
+                comment.setParentId(0);
+
+                // 金句的评论总数加1
+                Integer affectCount = jinjuDao.increaseJinjuComment(comment.getJinjuId());
+                if(affectCount == 0) {
+                    throw new CustomException("金句不存在，不可评论!");
+                }
+
+            } else {
+
+                // 一级评论的评论总数加1
+                Integer affectCount = jinjuDao.increaseComment(comment.getParentId());
+
+                if(affectCount == 0) {
+                    throw new CustomException("一级评论不存在，不可评论!");
+                }
+
+            }
+
+            jinjuDao.createComment(comment);
+
+            result.setSuccess("操作成功!");
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            result.setError("操作失败");
+            if(e instanceof CustomException) {
+                result.setError(e.getMessage());
+            }
+            LOG.error("操作失败!", e);
+        }
+        return result;
+    }
+
+    /**
+     * 获取评论列表
+     * @param jinjuId
+     * @param parentId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public Result listComment(Integer jinjuId, Integer parentId, int pageIndex, int pageSize) {
+
+        Result result = new Result();
+
+        try {
+            if(parentId == null) {
+                parentId = 0;
+            }
+
+            Integer m = (pageIndex - 1) * pageSize;
+            ArrayList<Comment> list = jinjuDao.listCommentByPage(m, pageSize, jinjuId, parentId);
+
+            Integer total = jinjuDao.listCommentCount(jinjuId, parentId);
+
+            PageInfo<Comment> pageInfo = new PageInfo(total, list);
+
+            result.setSuccess(pageInfo, "评论列表数据获取成功");
+        } catch (Exception e) {
+            result.setError("评论列表数据获取失败");
+        }
+
+        return result;
+    }
 }

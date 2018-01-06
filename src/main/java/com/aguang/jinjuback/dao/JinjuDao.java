@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.dao;
 
+import com.aguang.jinjuback.model.Comment;
 import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import org.apache.ibatis.annotations.*;
@@ -12,10 +13,6 @@ import java.util.ArrayList;
 public interface JinjuDao {
 
     void createJinju(Jinju jinju);
-
-    JinjuInfo getJinju(int id);
-
-    ArrayList<JinjuInfo> getJinjuList(@Param("m") int m, @Param("n") int n);
 
     ArrayList<JinjuInfo> listByPageWithUserId(@Param("m") int m, @Param("n") int n, @Param("userId") int userId);
 
@@ -105,5 +102,39 @@ public interface JinjuDao {
     @Update("update `jinju` set collect_count=collect_count-1 where jinju_id=#{jijuId}")
     void decreaseCollect(Integer jijuId);
 
+    /**
+     * 创建评论
+     * @param comment
+     */
+    void createComment(Comment comment);
+
+    /**
+     * 金句的评论总数加1
+     * @param jinjuId
+     */
+    @Update("update `jinju` set comment_count=comment_count+1 where jinju_id=#{jijuId}")
+    Integer increaseJinjuComment(Integer jinjuId);
+
+    /**
+     * 一级评论的评论总数加1
+     * @param parentId
+     */
+    @Update("update `jj_comment` set comment_count=comment_count+1 where id=#{parentId}")
+    Integer increaseComment(Integer parentId);
+
+    /**
+     * 获取评论列表
+     * @return
+     */
+    ArrayList<Comment> listCommentByPage(@Param("m") int m, @Param("n") int n, @Param("jinjuId") Integer jinjuId, @Param("parentId") Integer parentId);
+
+    /**
+     * 获取评论总数
+     * @param jinjuId
+     * @param parentId
+     * @return
+     */
+    @Select("SELECT COUNT(1) FROM jj_comment c where c.jinju_id = #{jinjuId} and c.parent_id = #{parentId}")
+    Integer listCommentCount(@Param("jinjuId") Integer jinjuId, @Param("parentId") Integer parentId);
 
 }

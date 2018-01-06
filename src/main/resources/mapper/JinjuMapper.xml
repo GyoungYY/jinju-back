@@ -108,4 +108,38 @@
         WHERE j.jinju_id = #{id}
     </select>
 
+    <insert id="createComment">
+        INSERT INTO jinju_db.jj_comment(jinju_id,user_id,content,up_vote_count,down_vote_count,comment_count,parent_id,create_time)
+        VALUES(#{jinjuId},#{userId},#{content},#{upVoteCount},#{downVoteCount},#{commentCount},#{parentId},#{createTime});
+    </insert>
+
+    <select id="listCommentByPage" resultType="com.aguang.jinjuback.pojo.CommentInfo">
+        SELECT
+            c.id,
+            c.jinju_id,
+            c.content,
+        <if test="parentId == 0">
+            c.up_vote_count,
+            c.down_vote_count,
+            c.comment_count,
+        </if>
+
+        <if test="parentId != 0">
+            c.parent_id,
+        </if>
+            c.create_time,
+            u.user_id,
+            u.username,
+            u.photo_url
+        FROM
+            jj_comment c
+        LEFT JOIN jj_user u ON c.user_id = u.user_id
+        WHERE c.jinju_id = #{jinjuId}
+              and c.parent_id = #{parentId}
+
+        order by c.create_time desc
+
+        LIMIT #{m},#{n}
+    </select>
+
 </mapper>

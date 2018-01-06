@@ -1,19 +1,20 @@
 package com.aguang.jinjuback.pojo;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import java.io.Serializable;
 
 /**
- * 返回页面的金句Info
+ * 返回页面的评论Info
  */
-public class JinjuInfo implements Serializable {
+public class CommentInfo implements Serializable {
+
+    // 金句类型
+    private Integer id;
 
     // 金句id
     private Integer jinjuId;
 
-    // 金句类型
-    private Integer type;
+    // 一级评论id
+    private Integer parentId;
 
     // 金句内容
     private String content;
@@ -24,18 +25,8 @@ public class JinjuInfo implements Serializable {
     // 点踩总数
     private Integer downVoteCount;
 
-    // 收藏总数
-    private Integer collectCount;
-
     // 评论总数
     private Integer commentCount;
-
-    // 点赞或踩  1：赞、2：踩、其它
-    private Integer upOrDownVote;
-
-    // 是否收藏
-    @JSONField(name = "isCollect")
-    private boolean isCollect;
 
     // 金句创建用户id
     private Integer userId;
@@ -46,11 +37,16 @@ public class JinjuInfo implements Serializable {
     /* 头像 */
     private String photoUrl;
 
-    // 金句创建时间
+    // 评论创建时间
     private long createTime;
 
-    // 金句更新时间
-    private long updateTime;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getJinjuId() {
         return jinjuId;
@@ -60,12 +56,12 @@ public class JinjuInfo implements Serializable {
         this.jinjuId = jinjuId;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getParentId() {
+        return parentId;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
     public String getContent() {
@@ -92,36 +88,12 @@ public class JinjuInfo implements Serializable {
         this.downVoteCount = downVoteCount;
     }
 
-    public Integer getCollectCount() {
-        return collectCount;
-    }
-
-    public void setCollectCount(Integer collectCount) {
-        this.collectCount = collectCount;
-    }
-
     public Integer getCommentCount() {
         return commentCount;
     }
 
     public void setCommentCount(Integer commentCount) {
         this.commentCount = commentCount;
-    }
-
-    public Integer getUpOrDownVote() {
-        return upOrDownVote;
-    }
-
-    public void setUpOrDownVote(Integer upOrDownVote) {
-        this.upOrDownVote = upOrDownVote;
-    }
-
-    public boolean isCollect() {
-        return isCollect;
-    }
-
-    public void setCollect(boolean collect) {
-        isCollect = collect;
     }
 
     public Integer getUserId() {
@@ -154,13 +126,5 @@ public class JinjuInfo implements Serializable {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
-    }
-
-    public long getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
     }
 }
