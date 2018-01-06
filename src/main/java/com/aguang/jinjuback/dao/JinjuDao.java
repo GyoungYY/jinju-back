@@ -137,4 +137,17 @@ public interface JinjuDao {
     @Select("SELECT COUNT(1) FROM jj_comment c where c.jinju_id = #{jinjuId} and c.parent_id = #{parentId}")
     Integer listCommentCount(@Param("jinjuId") Integer jinjuId, @Param("parentId") Integer parentId);
 
+    /**
+     * 一级评论点赞数加1
+     * @param id
+     */
+    @Update("update `jj_comment` set up_vote_count=up_vote_count+1 where id=#{id}")
+    Integer increaseCommentUpVote(Integer id);
+
+    /**
+     * 一级评论点赞数减1
+     * @param id
+     */
+    @Update("update `jj_comment` set up_vote_count=up_vote_count-1 where id=#{id}")
+    Integer decreaseCommentUpVote(Integer id);
 }

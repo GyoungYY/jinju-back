@@ -328,6 +328,48 @@ public class JinjuService {
             result.setSuccess(pageInfo, "评论列表数据获取成功");
         } catch (Exception e) {
             result.setError("评论列表数据获取失败");
+            LOG.error("操作失败!", e);
+        }
+
+        return result;
+    }
+
+    /**
+     * 评论点赞
+     * @param commentId
+     * @param type
+     * @return
+     */
+    @Transactional
+    public Result upVoteComment(Integer commentId, String type) {
+        Result result = new Result();
+
+        try {
+            if(ConfirmOrCalcelConstant.CONFIRM.equals(type)) {
+
+                // 一级评论点赞数加1
+                Integer affectCount = jinjuDao.increaseCommentUpVote(commentId);
+                if(affectCount == 0) {
+                    throw new CustomException("一级评论不存在，不可点赞!");
+                }
+
+            } else if(ConfirmOrCalcelConstant.CALCEL.equals(type)) {
+
+                // 一级评论点赞数减1
+                Integer affectCount = jinjuDao.decreaseCommentUpVote(commentId);
+                if(affectCount == 0) {
+                    throw new CustomException("一级评论不存在，不可取消点赞!");
+                }
+            }
+
+            result.setSuccess("操作成功");
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            result.setError("操作失败");
+            if(e instanceof CustomException) {
+                result.setError(e.getMessage());
+            }
+            LOG.error("操作失败!", e);
         }
 
         return result;

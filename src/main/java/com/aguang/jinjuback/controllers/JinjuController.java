@@ -82,7 +82,6 @@ public class JinjuController extends BaseController {
         return jinjuService.collect(jijuId, type, getUserId());
     }
 
-
     /**
      * 创建评论
      * @return
@@ -108,5 +107,14 @@ public class JinjuController extends BaseController {
                               @RequestParam(value = "parentId", required = false) Integer parentId) {
 
         return jinjuService.listComment(jinjuId, parentId, pageIndex, pageSize);
+    }
+
+    /**
+     * 评论点赞
+     * @return
+     */
+    @PostMapping("/comment/upVote/{id}")
+    public Result upVoteComment(@PathVariable("id") Integer commentId, @RequestParam("type") String type) {
+        return jinjuService.upVoteComment(commentId, type);
     }
 }

@@ -108,11 +108,13 @@
         WHERE j.jinju_id = #{id}
     </select>
 
+    <!-- 创建评论 -->
     <insert id="createComment">
         INSERT INTO jinju_db.jj_comment(jinju_id,user_id,content,up_vote_count,down_vote_count,comment_count,parent_id,create_time)
         VALUES(#{jinjuId},#{userId},#{content},#{upVoteCount},#{downVoteCount},#{commentCount},#{parentId},#{createTime});
     </insert>
 
+    <!-- 获取评论列表 -->
     <select id="listCommentByPage" resultType="com.aguang.jinjuback.pojo.CommentInfo">
         SELECT
             c.id,
