@@ -1,18 +1,33 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.pojo.UserInfo;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import com.aguang.jinjuback.model.User;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
 public interface UserDao {
+
+    @Insert("INSERT INTO jinju_db.jj_user(username,password,create_time,update_time) VALUES(#{username},#{password},#{curTime},#{curTime})")
     void createUser(@Param("username") String username,@Param("password") String password,@Param("curTime") Long curTime);
 
-    UserInfo getUser(@Param("id") int id);
+    @Select("SELECT * FROM jinju_db.jj_user WHERE user_id = #{id}")
+    User getUser(@Param("id") int id);
 
-    UserInfo getUserByUsername(@Param("username") String username);
+//    UserInfo getUser(@Param("id") int id);
 
-    void updateUser(UserInfo userInfo);
+//    UserInfo getUserByUsername(@Param("username") String username);
+
+//    void updateUser(UserInfo userInfo);
+
+    void updateUser(User user);
+
+    @Select("select * from jj_user where username=#{username}")
+    User getUserByUsername(String username);
+
+    @Update("update jinju_db.jj_user set last_login_time=#{curTime} where user_id=#{id}")
+    void updateLastLoginTime(@Param("id") Integer id, @Param("curTime") Long curTime);
+
+    @Select("select * from jj_user where user_id=#{userId}")
+    User getUserById(Integer userId);
 }

@@ -3,11 +3,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/jinju_db?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://rm-uf64u905qg7su2h2uo.mysql.rds.aliyuncs.com:3306/jinju_db?useUnicode=true&characterEncoding=utf8
     username: root
-    password: 930206
+    password: geeklab20
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true

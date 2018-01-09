@@ -1,12 +1,11 @@
 package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.dao.UserDao;
+import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.Result;
-import com.aguang.jinjuback.pojo.UserInfo;
+import com.aguang.jinjuback.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 public class UserService {
@@ -14,23 +13,33 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
+    /**
+     * 注册用户
+     * @param username
+     * @param password
+     * @return
+     */
     public Result createUser(String username, String password) {
         Result result = new Result();
-        UserInfo user = new UserInfo();
-        user = userDao.getUserByUsername(username);
+        User user = userDao.getUserByUsername(username);
         if (user == null) {
-            Long curTime = new Date().getTime();
+            Long curTime = DateUtils.getCurrentTime();
             userDao.createUser(username, password, curTime);
-            result.setSuccess(null, "注册成功");
+            result.setSuccess("注册成功");
             return result;
         }
-        result.setError(null, "用户名已存在");
+        result.setError("用户名已存在");
         return result;
     }
 
+    /**
+     * 根据id获取用户详细信息
+     * @param id
+     * @return
+     */
     public Result getUser(int id) {
         Result result = new Result();
-        UserInfo user = userDao.getUser(id);
+        User user = userDao.getUser(id);
         if (user == null) {
             result.setError(null, "用户不存在");
             return result;
@@ -40,10 +49,15 @@ public class UserService {
         return result;
     }
 
+    /**
+     * 用户登录
+     * @param username
+     * @param password
+     * @return
+     */
     public Result login(String username, String password) {
         Result result = new Result();
-        UserInfo user = new UserInfo();
-        user = userDao.getUserByUsername(username);
+        User user = userDao.getUserByUsername(username);
         if (user == null) {
             result.setError(null, "用户不存在");
             return result;
@@ -51,25 +65,44 @@ public class UserService {
             result.setError(null, "密码错误");
             return result;
         }
+
+        // 更新最后登录时间
+        userDao.updateLastLoginTime(user.getUserId(), DateUtils.getCurrentTime());
+
         user.setPassword(null);
         result.setSuccess(user, "登录成功");
         return result;
     }
 
-    public Result updateUser(UserInfo userInfo){
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
+    public Result updateUser(User user){
         Result result = new Result();
-        UserInfo user = userDao.getUser(userInfo.getUser_id());
-        if (user == null) {
-            result.setError(null, "用户不存在");
+        User userInfo = userDao.getUser(user.getUserId());
+        if (userInfo == null) {
+            result.setError("用户不存在");
             return result;
         }
-        user = userDao.getUserByUsername(userInfo.getUsername());
-        if(user != null && (user.getUser_id() != userInfo.getUser_id())){
+
+        // 判断用户名是否与别人重复
+        User userInfo2 = userDao.getUserByUsername(userInfo.getUsername());
+        if (userInfo2 != null && (!userInfo2.getUserId().equals(userInfo.getUserId()))) {
             result.setError(null, "该用户名已存在，不要与别人一样哦~");
             return result;
         }
-        userDao.updateUser(userInfo);
+
+        user.setUpdateTime(DateUtils.getCurrentTime());
+
+        userDao.updateUser(user);
         result.setSuccess(user, "更新成功");
         return result;
+    }
+
+    public boolean hasUser(Integer userId) {
+        User user = userDao.getUserById(userId);
+        return user != null;
     }
 }

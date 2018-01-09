@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aguang.jinjuback.dao.UserDao">
 
-    <insert id="createUser">
+   <!-- <insert id="createUser">
         INSERT INTO jinju_db.jj_user(username,password,create_time) VALUES(#{username},#{password},#{curTime});
-    </insert>
+    </insert>-->
 
-    <select id="getUser" resultType="com.aguang.jinjuback.pojo.UserInfo">
+    <!--<select id="getUser" resultType="com.aguang.jinjuback.pojo.UserInfo">
         SELECT * FROM jinju_db.jj_user WHERE user_id = #{id};
-    </select>
+    </select>-->
 
-    <select id="getUserByUsername" resultType="com.aguang.jinjuback.pojo.UserInfo">
+    <!--<select id="getUserByUsername" resultType="com.aguang.jinjuback.pojo.UserInfo">
         SELECT user_id,username,password FROM jinju_db.jj_user WHERE username = #{username};
-    </select>
+    </select>-->
 
-    <update id="updateUser" parameterType="com.aguang.jinjuback.pojo.UserInfo">
-        UPDATE jinju_db.jj_user SET username = #{username},tel = #{tel},email = #{email}, address = #{address}
-        WHERE user_id = #{user_id}
+    <update id="updateUser" parameterType="com.aguang.jinjuback.model.User">
+        UPDATE jinju_db.jj_user SET username = #{username},tel = #{tel},email = #{email}, address = #{address}, update_time = #{updateTime}
+        WHERE user_id = #{userId}
     </update>
 </mapper>

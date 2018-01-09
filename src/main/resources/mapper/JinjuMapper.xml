@@ -3,20 +3,145 @@
 <mapper namespace="com.aguang.jinjuback.dao.JinjuDao">
 
     <insert id="createJinju">
-        INSERT INTO jinju_db.jinju(user_id,content,type,create_time) VALUES(#{user_id},#{content},#{type},#{create_time});
+        INSERT INTO jinju_db.jinju(user_id,content,type,up_vote_count,down_vote_count,collect_count,comment_count,is_delete,create_time,update_time)
+        VALUES(#{userId},#{content},#{type},#{upVoteCount},#{downVoteCount},#{collectCount},#{commentCount},#{isDelete},#{createTime},#{updateTime});
     </insert>
 
-    <select id="getJinju" resultType="com.aguang.jinjuback.pojo.Jinju">
+    <select id="getJinju" resultType="com.aguang.jinjuback.model.Jinju">
         SELECT * FROM jinju_db.jinju WHERE jinju_id = #{id};
     </select>
 
-    <select id="getJinjuList" resultType="com.aguang.jinjuback.pojo.Jinju">
+    <select id="getJinjuList" resultType="com.aguang.jinjuback.model.Jinju">
         SELECT a.user_id,a.content,a.type,b.username FROM jinju_db.jinju a,jinju_db.jj_user b
         WHERE a.user_id = b.user_id LIMIT #{m},#{n};
     </select>
 
-    <select id="getListCount" resultType="int">
-        SELECT COUNT(*) FROM jinju_db.jinju;
+    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+        SELECT
+            j.jinju_id,
+            j.content,
+            j.type,
+            j.up_vote_count,
+            j.down_vote_count,
+            l.type AS up_or_down_vote,
+            j.collect_count,
+            c.collect as is_collect,
+            j.comment_count,
+            j.create_time,
+            j.update_time,
+            u.user_id,
+            u.username
+        FROM
+            jinju j
+        LEFT JOIN jj_user u ON j.user_id = u.user_id
+        LEFT JOIN jj_vote l ON j.jinju_id = l.jinju_id
+        AND l.user_id = #{userId}
+        LEFT JOIN jj_collect c ON j.jinju_id = c.jinju_id
+        AND c.user_id = #{userId}
+        order by j.update_time desc
+
+        LIMIT #{m},#{n}
+    </select>
+
+    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+        SELECT
+        j.jinju_id,
+        j.content,
+        j.type,
+        j.up_vote_count,
+        j.down_vote_count,
+        j.collect_count,
+        j.comment_count,
+        j.create_time,
+        j.update_time,
+        u.user_id,
+        u.username
+        FROM
+            jinju j
+        LEFT JOIN jj_user u ON j.user_id = u.user_id
+        order by j.update_time desc
+
+        LIMIT #{m},#{n}
+    </select>
+
+    <select id="getJinjuWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+        SELECT
+            j.jinju_id,
+            j.content,
+            j.type,
+            j.up_vote_count,
+            j.down_vote_count,
+            l.type AS up_or_down_vote,
+            j.collect_count,
+            c.collect as is_collect,
+            j.comment_count,
+            j.create_time,
+            j.update_time,
+            u.user_id,
+            u.username
+        FROM
+          jinju j
+        LEFT JOIN jj_user u ON j.user_id = u.user_id
+        LEFT JOIN jj_vote l ON j.jinju_id = l.jinju_id
+        AND l.user_id = #{userId}
+        LEFT JOIN jj_collect c ON j.jinju_id = c.jinju_id
+        AND c.user_id = #{userId}
+        WHERE j.jinju_id = #{id}
+    </select>
+
+    <select id="getJinjuWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
+        SELECT
+            j.jinju_id,
+            j.content,
+            j.type,
+            j.up_vote_count,
+            j.down_vote_count,
+            j.collect_count,
+            j.comment_count,
+            j.create_time,
+            j.update_time,
+            u.user_id,
+            u.username
+        FROM
+          jinju j
+        LEFT JOIN jj_user u ON j.user_id = u.user_id
+        WHERE j.jinju_id = #{id}
+    </select>
+
+    <!-- 创建评论 -->
+    <insert id="createComment">
+        INSERT INTO jinju_db.jj_comment(jinju_id,user_id,content,up_vote_count,down_vote_count,comment_count,parent_id,create_time)
+        VALUES(#{jinjuId},#{userId},#{content},#{upVoteCount},#{downVoteCount},#{commentCount},#{parentId},#{createTime});
+    </insert>
+
+    <!-- 获取评论列表 -->
+    <select id="listCommentByPage" resultType="com.aguang.jinjuback.pojo.CommentInfo">
+        SELECT
+            c.id,
+            c.jinju_id,
+            c.content,
+        <if test="parentId == 0">
+            c.up_vote_count,
+            c.down_vote_count,
+            c.comment_count,
+        </if>
+
+        <if test="parentId != 0">
+            c.parent_id,
+        </if>
+            c.create_time,
+            u.user_id,
+            u.username,
+            u.photo_url
+        FROM
+            jj_comment c
+        LEFT JOIN jj_user u ON c.user_id = u.user_id
+        WHERE c.jinju_id = #{jinjuId}
+              and c.parent_id = #{parentId}
+
+        order by c.create_time desc
+
+        LIMIT #{m},#{n}
     </select>
 
 </mapper>
