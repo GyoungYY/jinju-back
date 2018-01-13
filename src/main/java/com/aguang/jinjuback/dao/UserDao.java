@@ -14,12 +14,6 @@ public interface UserDao {
     @Select("SELECT * FROM jinju_db.jj_user WHERE user_id = #{id}")
     User getUser(@Param("id") int id);
 
-//    UserInfo getUser(@Param("id") int id);
-
-//    UserInfo getUserByUsername(@Param("username") String username);
-
-//    void updateUser(UserInfo userInfo);
-
     void updateUser(User user);
 
     @Select("select * from jj_user where username=#{username}")

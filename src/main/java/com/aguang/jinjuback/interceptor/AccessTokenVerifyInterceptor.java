@@ -35,6 +35,7 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
                 || requestURL.contains("/jinju/list")
                 || requestURL.contains("/get")
                 || requestURL.contains("/comment/list")
+                || requestURL.contains("/area/list")
         ) ) {
             if (StringUtils.isBlank(userId)) {
                 flag = false;

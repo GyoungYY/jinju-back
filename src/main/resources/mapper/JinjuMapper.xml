@@ -2,20 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aguang.jinjuback.dao.JinjuDao">
 
+    <!-- 创建金句 -->
     <insert id="createJinju">
         INSERT INTO jinju_db.jinju(user_id,content,type,up_vote_count,down_vote_count,collect_count,comment_count,is_delete,create_time,update_time)
         VALUES(#{userId},#{content},#{type},#{upVoteCount},#{downVoteCount},#{collectCount},#{commentCount},#{isDelete},#{createTime},#{updateTime});
     </insert>
 
-    <select id="getJinju" resultType="com.aguang.jinjuback.model.Jinju">
-        SELECT * FROM jinju_db.jinju WHERE jinju_id = #{id};
-    </select>
-
-    <select id="getJinjuList" resultType="com.aguang.jinjuback.model.Jinju">
-        SELECT a.user_id,a.content,a.type,b.username FROM jinju_db.jinju a,jinju_db.jj_user b
-        WHERE a.user_id = b.user_id LIMIT #{m},#{n};
-    </select>
-
+    <!-- 获取金句的列表信息（用户已登录的情况） -->
     <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
         SELECT
             j.jinju_id,
@@ -43,6 +36,7 @@
         LIMIT #{m},#{n}
     </select>
 
+    <!-- 获取金句的列表信息（用户未登录的情况） -->
     <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
         SELECT
         j.jinju_id,
@@ -64,6 +58,7 @@
         LIMIT #{m},#{n}
     </select>
 
+    <!-- 获取金句的详细信息（用户已登录的情况） -->
     <select id="getJinjuWithUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
         SELECT
             j.jinju_id,
@@ -89,6 +84,7 @@
         WHERE j.jinju_id = #{id}
     </select>
 
+    <!-- 获取金句的详细信息（用户未登录的情况） -->
     <select id="getJinjuWithoutUserId" resultType="com.aguang.jinjuback.pojo.JinjuInfo">
         SELECT
             j.jinju_id,

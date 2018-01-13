@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
 /**
- * 评论表
+ * 评论表(jj_comment)
  */
 public class Comment {
 

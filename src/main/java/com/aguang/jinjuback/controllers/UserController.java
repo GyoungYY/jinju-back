@@ -4,9 +4,11 @@ import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -27,16 +29,6 @@ public class UserController {
     }
 
     /**
-     * 获取用户详情
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}")
-    public Result getUser(@PathVariable("id") int id) {
-        return userService.getUser(id);
-    }
-
-    /**
      * 用户登录
      * @param username
      * @param password
@@ -53,16 +45,6 @@ public class UserController {
     }
 
     /**
-     * 用户更新
-     * @param user
-     * @return
-     */
-    @PostMapping("/update")
-    public Result updateUser(@RequestBody User user){
-        return userService.updateUser(user);
-    }
-
-    /**
      * 用户退出
      * @param id
      * @return
@@ -76,5 +58,30 @@ public class UserController {
         result.setSuccess("退出成功!");
 
         return result;
+    }
+
+    /**
+     * 获取用户详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result getUser(@PathVariable("id") int id) {
+        return userService.getUser(id);
+    }
+
+    /**
+     * 用户更新
+     * @param user
+     * @return
+     */
+    @PostMapping("/update")
+    public Result updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Result result = new Result();
+            result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return result;
+        }
+        return userService.updateUser(user);
     }
 }

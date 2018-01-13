@@ -14,8 +14,17 @@
         SELECT user_id,username,password FROM jinju_db.jj_user WHERE username = #{username};
     </select>-->
 
+    <!-- 更新用户信息 -->
     <update id="updateUser" parameterType="com.aguang.jinjuback.model.User">
-        UPDATE jinju_db.jj_user SET username = #{username},tel = #{tel},email = #{email}, address = #{address}, update_time = #{updateTime}
+        UPDATE
+          jinju_db.jj_user
+        SET
+          username = #{username},
+          tel = #{tel},
+          email = #{email},
+          addr_code = #{addrCode},
+          addr_detail = #{addrDetail},
+          update_time = #{updateTime}
         WHERE user_id = #{userId}
     </update>
 </mapper>

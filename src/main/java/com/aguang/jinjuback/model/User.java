@@ -1,11 +1,17 @@
 package com.aguang.jinjuback.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * 用户表(jj_user)
+ */
 public class User {
 
     private Integer userId;
 
+    @NotBlank
     private String username;
 
     @JSONField(serialize = false)
@@ -13,11 +19,14 @@ public class User {
 
     private String tel;
 
+    @Email
     private String email;
 
     private String photoUrl;
 
-    private String address;
+    private String addrCode;
+
+    private String addrDetail;
 
     @JSONField(serialize = false)
     private int enabled;
@@ -76,12 +85,20 @@ public class User {
         this.photoUrl = photoUrl;
     }
 
-    public String getAddress() {
-        return address;
+    public String getAddrCode() {
+        return addrCode;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddrCode(String addrCode) {
+        this.addrCode = addrCode;
+    }
+
+    public String getAddrDetail() {
+        return addrDetail;
+    }
+
+    public void setAddrDetail(String addrDetail) {
+        this.addrDetail = addrDetail;
     }
 
     public int getEnabled() {
