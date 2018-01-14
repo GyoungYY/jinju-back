@@ -1,6 +1,7 @@
 package com.aguang.jinjuback.dao;
 
 import com.aguang.jinjuback.model.User;
+import com.aguang.jinjuback.pojo.UserInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,8 @@ public interface UserDao {
 
     @Select("SELECT * FROM jinju_db.jj_user WHERE user_id = #{id}")
     User getUser(@Param("id") int id);
+
+    UserInfo getUserInfo(@Param("id") int id);
 
     void updateUser(User user);
 

@@ -1,23 +1,38 @@
 package com.aguang.jinjuback.pojo;
 
+/**
+ * 用户信息
+ */
 public class UserInfo {
 
-    private int user_id;
-    private String username;
-    private String password;
-    private String tel;
-    private String email;
-    private String photoUrl;
-    private String address;
-    private Long create_time;
-    private Long update_time;
+    private Integer userId;
 
-    public int getUser_id() {
-        return user_id;
+    private String username;
+
+    private String tel;
+
+    private String email;
+
+    private String photoUrl;
+
+    private String provinceCode;
+
+    private String cityCode;
+
+    private String countyCode;
+
+    private String addrDetail;
+
+    private Long createTime;
+
+    private Long lastLoginTime;
+
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -26,14 +41,6 @@ public class UserInfo {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getTel() {
@@ -60,27 +67,51 @@ public class UserInfo {
         this.photoUrl = photoUrl;
     }
 
-    public String getAddress() {
-        return address;
+    public String getProvinceCode() {
+        return provinceCode;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
     }
 
-    public Long getCreate_time() {
-        return create_time;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setCreate_time(Long create_time) {
-        this.create_time = create_time;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
-    public Long getUpdate_time() {
-        return update_time;
+    public String getCountyCode() {
+        return countyCode;
     }
 
-    public void setUpdate_time(Long update_time) {
-        this.update_time = update_time;
+    public void setCountyCode(String countyCode) {
+        this.countyCode = countyCode;
+    }
+
+    public String getAddrDetail() {
+        return addrDetail;
+    }
+
+    public void setAddrDetail(String addrDetail) {
+        this.addrDetail = addrDetail;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Long lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 }

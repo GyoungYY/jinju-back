@@ -6,9 +6,23 @@
         INSERT INTO jinju_db.jj_user(username,password,create_time) VALUES(#{username},#{password},#{curTime});
     </insert>-->
 
-    <!--<select id="getUser" resultType="com.aguang.jinjuback.pojo.UserInfo">
-        SELECT * FROM jinju_db.jj_user WHERE user_id = #{id};
-    </select>-->
+    <select id="getUserInfo" resultType="com.aguang.jinjuback.pojo.UserInfo">
+        SELECT
+            user_id,
+            username,
+            tel,
+            email,
+            photo_url,
+            CONCAT(LEFT(addr_code, 2), '0000') AS province_code,
+            CONCAT(LEFT(addr_code, 4), '00') AS city_code,
+            addr_code AS county_code,
+            addr_detail,
+            create_time,
+            last_login_time
+        FROM
+            jinju_db.jj_user
+        WHERE user_id = #{id};
+    </select>
 
     <!--<select id="getUserByUsername" resultType="com.aguang.jinjuback.pojo.UserInfo">
         SELECT user_id,username,password FROM jinju_db.jj_user WHERE username = #{username};
