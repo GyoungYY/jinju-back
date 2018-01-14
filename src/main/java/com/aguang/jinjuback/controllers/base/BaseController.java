@@ -1,4 +1,4 @@
-package com.aguang.jinjuback.controllers;
+package com.aguang.jinjuback.controllers.base;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

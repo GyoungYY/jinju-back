@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.controllers;
 
+import com.aguang.jinjuback.controllers.base.BaseController;
 import com.aguang.jinjuback.model.AreaInfo;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.AreaInfoService;

@@ -105,4 +105,15 @@ public class UserService {
         User user = userDao.getUserById(userId);
         return user != null;
     }
+
+    /**
+     * 更新用户头像
+     * @param userId
+     * @param photoUrl
+     * @return
+     */
+    public void updatePhotoUrl(Integer userId, String photoUrl) {
+
+        userDao.updatePhotoUrl(userId, photoUrl);
+    }
 }

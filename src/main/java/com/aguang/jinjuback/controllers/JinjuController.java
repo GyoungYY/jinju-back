@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.controllers;
 
+import com.aguang.jinjuback.controllers.base.BaseController;
 import com.aguang.jinjuback.model.Comment;
 import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;

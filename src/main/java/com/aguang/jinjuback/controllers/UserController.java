@@ -1,9 +1,13 @@
 package com.aguang.jinjuback.controllers;
 
+import com.aguang.jinjuback.controllers.base.BaseController;
 import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +16,12 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
+
+    public final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @Value("${qiniu.domainName}")
+    private String qiniuDomainName;
 
     @Autowired
     private UserService userService;
@@ -83,5 +92,27 @@ public class UserController {
             return result;
         }
         return userService.updateUser(user);
+    }
+
+    /**
+     * 更新用户头像
+     * @param photoUrl
+     * @return
+     */
+    @PostMapping("/updatePhotoUrl")
+    public Result updatePhotoUrl(@RequestParam String photoUrl) {
+        Result result = new Result();
+
+        try {
+            photoUrl = qiniuDomainName + photoUrl;
+
+            userService.updatePhotoUrl(getUserId(), photoUrl);
+            result.setSuccess("头像更新成功!");
+        } catch (Exception e) {
+            result.setError("头像更新失败!");
+            logger.error("头像更新失败", e);
+        }
+
+        return result;
     }
 }
