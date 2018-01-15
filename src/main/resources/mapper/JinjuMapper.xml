@@ -23,7 +23,8 @@
             j.create_time,
             j.update_time,
             u.user_id,
-            u.username
+            u.username,
+            u.photo_url
         FROM
             jinju j
         LEFT JOIN jj_user u ON j.user_id = u.user_id
@@ -49,7 +50,8 @@
         j.create_time,
         j.update_time,
         u.user_id,
-        u.username
+        u.username,
+        u.photo_url
         FROM
             jinju j
         LEFT JOIN jj_user u ON j.user_id = u.user_id
@@ -73,7 +75,8 @@
             j.create_time,
             j.update_time,
             u.user_id,
-            u.username
+            u.username,
+            u.photo_url
         FROM
           jinju j
         LEFT JOIN jj_user u ON j.user_id = u.user_id
@@ -97,7 +100,8 @@
             j.create_time,
             j.update_time,
             u.user_id,
-            u.username
+            u.username,
+            u.photo_url
         FROM
           jinju j
         LEFT JOIN jj_user u ON j.user_id = u.user_id
