@@ -3,6 +3,7 @@ package com.aguang.jinjuback.services;
 import com.aguang.jinjuback.dao.UserDao;
 import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.Result;
+import com.aguang.jinjuback.pojo.UserInfo;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,13 +40,12 @@ public class UserService {
      */
     public Result getUser(int id) {
         Result result = new Result();
-        User user = userDao.getUser(id);
-        if (user == null) {
+        UserInfo userInfo = userDao.getUserInfo(id);
+        if (userInfo == null) {
             result.setError(null, "用户不存在");
             return result;
         }
-        user.setPassword(null);
-        result.setSuccess(user, "用户数据获取成功");
+        result.setSuccess(userInfo, "用户数据获取成功");
         return result;
     }
 
@@ -104,5 +104,16 @@ public class UserService {
     public boolean hasUser(Integer userId) {
         User user = userDao.getUserById(userId);
         return user != null;
+    }
+
+    /**
+     * 更新用户头像
+     * @param userId
+     * @param photoUrl
+     * @return
+     */
+    public void updatePhotoUrl(Integer userId, String photoUrl) {
+
+        userDao.updatePhotoUrl(userId, photoUrl);
     }
 }

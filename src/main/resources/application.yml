@@ -13,3 +13,11 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     mapUnderscoreToCamelCase: true
+
+
+# 七牛
+qiniu:
+  accessKey: 19aQdu9aO5mtERdtAo4kQyUsYB6KOPVdE8ukMaBh
+  secretKey: NM0gE2uPl0syJnJ7-JPuSVyXryq03YNY_ujvHQd4
+  bucket: jinju
+  domainName: http://p2g5cb64g.bkt.clouddn.com/

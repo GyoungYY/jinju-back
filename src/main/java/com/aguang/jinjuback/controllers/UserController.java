@@ -1,16 +1,27 @@
 package com.aguang.jinjuback.controllers;
 
+import com.aguang.jinjuback.controllers.base.BaseController;
 import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
+
+    public final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @Value("${qiniu.domainName}")
+    private String qiniuDomainName;
 
     @Autowired
     private UserService userService;
@@ -24,16 +35,6 @@ public class UserController {
     @PostMapping("/create")
     public Result createUser(@RequestParam("username") String username, @RequestParam("password") String password) {
         return userService.createUser(username, password);
-    }
-
-    /**
-     * 获取用户详情
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}")
-    public Result getUser(@PathVariable("id") int id) {
-        return userService.getUser(id);
     }
 
     /**
@@ -53,16 +54,6 @@ public class UserController {
     }
 
     /**
-     * 用户更新
-     * @param user
-     * @return
-     */
-    @PostMapping("/update")
-    public Result updateUser(@RequestBody User user){
-        return userService.updateUser(user);
-    }
-
-    /**
      * 用户退出
      * @param id
      * @return
@@ -74,6 +65,53 @@ public class UserController {
         request.getSession().removeAttribute("userId");
 
         result.setSuccess("退出成功!");
+
+        return result;
+    }
+
+    /**
+     * 获取用户详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result getUser(@PathVariable("id") int id) {
+        return userService.getUser(id);
+    }
+
+    /**
+     * 用户更新
+     * @param user
+     * @return
+     */
+    @PostMapping("/update")
+    public Result updateUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Result result = new Result();
+            result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return result;
+        }
+        return userService.updateUser(user);
+    }
+
+    /**
+     * 更新用户头像
+     * @param photoUrl
+     * @return
+     */
+    @PostMapping("/updatePhotoUrl")
+    public Result updatePhotoUrl(@RequestParam String photoUrl) {
+        Result result = new Result();
+
+        try {
+            photoUrl = qiniuDomainName + photoUrl;
+
+            userService.updatePhotoUrl(getUserId(), photoUrl);
+            result.setSuccess("头像更新成功!");
+        } catch (Exception e) {
+            result.setError("头像更新失败!");
+            logger.error("头像更新失败", e);
+        }
 
         return result;
     }
