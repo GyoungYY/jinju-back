@@ -14,7 +14,7 @@ public class BaseController {
     public Integer getUserId() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Integer userId = (Integer) request.getSession().getAttribute("userId");
-        return 335;
+        return userId;
     }
 
 }
