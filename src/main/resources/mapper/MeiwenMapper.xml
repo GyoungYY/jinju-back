@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aguang.jinjuback.dao.MeiwenDao">
+
+    <!-- 创建金句 -->
+    <insert id="createMeiwen">
+        INSERT INTO
+          jinju_db.meiwen(user_id,title,type,summary,cover_photo,content,browse_count,collect_count,comment_count,is_delete,create_time,update_time)
+        VALUES(#{userId},#{title},#{type},#{summary},#{coverPhoto},#{content},
+              #{browseCount},#{collectCount},#{commentCount},#{isDelete},#{createTime},#{updateTime});
+    </insert>
+
+</mapper>

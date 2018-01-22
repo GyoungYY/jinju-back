@@ -70,6 +70,13 @@
 			<version>[7.2.0, 7.2.99]</version>
 		</dependency>
 
+		<!-- Redis -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

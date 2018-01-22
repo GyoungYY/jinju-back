@@ -19,5 +19,6 @@ mybatis:
 qiniu:
   accessKey: 19aQdu9aO5mtERdtAo4kQyUsYB6KOPVdE8ukMaBh
   secretKey: NM0gE2uPl0syJnJ7-JPuSVyXryq03YNY_ujvHQd4
-  bucket: jinju
+  jinju-bucket: jinju
+  meiwen-bucket: meiwen
   domainName: http://p2g5cb64g.bkt.clouddn.com/
