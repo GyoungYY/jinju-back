@@ -6,10 +6,7 @@ import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.MeiwenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -19,18 +16,6 @@ public class MeiwenController extends BaseController {
 
     @Autowired
     private MeiwenService meiwenService;
-
-    /**
-     * 查询美文列表
-     * @param pageIndex
-     * @param pageSize
-     * @return
-     */
-//    @GetMapping("/list")
-//    public Result list(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex,
-//                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-//        return jinjuService.getJinjuList(pageIndex, pageSize, getUserId());
-//    }
 
     /**
      * 创建美文
@@ -47,4 +32,15 @@ public class MeiwenController extends BaseController {
         return meiwenService.createMeiwen(meiwen, getUserId());
     }
 
+    /**
+     * 查询美文列表
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/list")
+    public Result list(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex,
+                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return meiwenService.getMeiwenList(pageIndex, pageSize, getUserId());
+    }
 }

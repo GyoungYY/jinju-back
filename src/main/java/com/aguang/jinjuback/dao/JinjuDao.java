@@ -14,8 +14,16 @@ public interface JinjuDao {
 
     void createJinju(Jinju jinju);
 
+    /**
+     * 获取金句的列表信息（用户已登录的情况）
+     * @return
+     */
     ArrayList<JinjuInfo> listByPageWithUserId(@Param("m") int m, @Param("n") int n, @Param("userId") int userId);
 
+    /**
+     *  获取金句的列表信息（用户未登录的情况）
+     * @return
+     */
     ArrayList<JinjuInfo> listByPageWithoutUserId(@Param("m") int m, @Param("n") int n);
 
     JinjuInfo getJinjuWithUserId(@Param("id") Integer id, @Param("userId") Integer userId);

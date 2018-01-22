@@ -33,6 +33,7 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
 
         if(!( requestURL.contains("/user")
                 || requestURL.contains("/jinju/list")
+                || requestURL.contains("/meiwen/list")
                 || requestURL.contains("/get")
                 || requestURL.contains("/comment/list")
                 || requestURL.contains("/area/list")

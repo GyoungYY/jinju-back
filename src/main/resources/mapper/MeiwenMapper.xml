@@ -10,4 +10,57 @@
               #{browseCount},#{collectCount},#{commentCount},#{isDelete},#{createTime},#{updateTime});
     </insert>
 
+    <!-- 获取美文的列表信息（用户已登录的情况） -->
+    <select id="listByPageWithUserId" resultType="com.aguang.jinjuback.pojo.MeiwenInfo">
+        SELECT
+            m.id as meiwenId,
+            m.type,
+            m.title,
+            m.summary,
+            m.cover_photo,
+            m.content,
+            m.browse_count,
+            m.collect_count,
+            c.collect as is_collect,
+            m.comment_count,
+            m.create_time,
+            m.update_time,
+            u.user_id,
+            u.username,
+            u.photo_url
+        FROM
+          meiwen m
+        LEFT JOIN jj_user u ON m.user_id = u.user_id
+        LEFT JOIN mw_collect c ON m.id = c.meiwen_id
+        AND c.user_id = #{userId}
+        order by m.create_time desc
+
+        LIMIT #{m},#{n}
+    </select>
+
+    <!-- 获取美文的列表信息（用户未登录的情况） -->
+    <select id="listByPageWithoutUserId" resultType="com.aguang.jinjuback.pojo.MeiwenInfo">
+        SELECT
+            m.id as meiwenId,
+            m.type,
+            m.title,
+            m.summary,
+            m.cover_photo,
+            m.content,
+            m.browse_count,
+            m.collect_count,
+            m.comment_count,
+            m.create_time,
+            m.update_time,
+            u.user_id,
+            u.username,
+            u.photo_url
+        FROM
+          meiwen m
+        LEFT JOIN jj_user u ON m.user_id = u.user_id
+        order by m.create_time desc
+
+        LIMIT #{m},#{n}
+    </select>
+
 </mapper>
