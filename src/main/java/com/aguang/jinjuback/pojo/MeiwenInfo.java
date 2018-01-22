@@ -22,7 +22,7 @@ public class MeiwenInfo implements Serializable {
     private String summary;
 
     /* 封页图片 */
-    private String coverPhoto;
+    private String coverImgUrl;
 
     /* 内容 */
     private String content;
@@ -87,12 +87,12 @@ public class MeiwenInfo implements Serializable {
         this.summary = summary;
     }
 
-    public String getCoverPhoto() {
-        return coverPhoto;
+    public String getCoverImgUrl() {
+        return coverImgUrl;
     }
 
-    public void setCoverPhoto(String coverPhoto) {
-        this.coverPhoto = coverPhoto;
+    public void setCoverImgUrl(String coverImgUrl) {
+        this.coverImgUrl = coverImgUrl;
     }
 
     public String getContent() {

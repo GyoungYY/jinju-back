@@ -5,8 +5,8 @@
     <!-- 创建金句 -->
     <insert id="createMeiwen">
         INSERT INTO
-          jinju_db.meiwen(user_id,title,type,summary,cover_photo,content,browse_count,collect_count,comment_count,is_delete,create_time,update_time)
-        VALUES(#{userId},#{title},#{type},#{summary},#{coverPhoto},#{content},
+          jinju_db.meiwen(user_id,title,type,summary,cover_img_url,content,browse_count,collect_count,comment_count,is_delete,create_time,update_time)
+        VALUES(#{userId},#{title},#{type},#{summary},#{coverImgUrl},#{content},
               #{browseCount},#{collectCount},#{commentCount},#{isDelete},#{createTime},#{updateTime});
     </insert>
 
@@ -17,7 +17,7 @@
             m.type,
             m.title,
             m.summary,
-            m.cover_photo,
+            m.cover_img_url,
             m.content,
             m.browse_count,
             m.collect_count,
@@ -45,7 +45,7 @@
             m.type,
             m.title,
             m.summary,
-            m.cover_photo,
+            m.cover_img_url,
             m.content,
             m.browse_count,
             m.collect_count,
