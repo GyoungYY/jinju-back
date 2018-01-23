@@ -23,3 +23,12 @@ qiniu:
   meiwen-bucket: meiwen
   domainName: http://p2g5cb64g.bkt.clouddn.com/
 
+
+#logging:
+#  level:
+#    org:
+#      springframework: WARN
+#    spring:
+#      springboot:
+#        dao: DEBUG
+

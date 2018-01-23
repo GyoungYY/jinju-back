@@ -43,4 +43,14 @@ public class MeiwenController extends BaseController {
                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return meiwenService.getMeiwenList(pageIndex, pageSize, getUserId());
     }
+
+    /**
+     * 获取金句信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/get/{id}")
+    public Result getJinju(@PathVariable("id") Integer id) {
+        return meiwenService.getMeiwen(id, getUserId());
+    }
 }

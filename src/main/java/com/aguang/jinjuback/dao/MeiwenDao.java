@@ -5,6 +5,7 @@ import com.aguang.jinjuback.pojo.MeiwenInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -33,4 +34,19 @@ public interface MeiwenDao {
 
     @Select("SELECT COUNT(1) FROM meiwen")
     int getListCount();
+
+    /**
+     * 获取美文详情
+     * @param id
+     * @param userId
+     * @return
+     */
+    MeiwenInfo getMeiwen(@Param("id") Integer id, @Param("userId") Integer userId);
+
+    /**
+     * 阅读量+1
+     * @param id
+     */
+    @Update("update `meiwen` set browse_count=browse_count+1 where id=#{id}")
+    void increaseBrowse(Integer id);
 }

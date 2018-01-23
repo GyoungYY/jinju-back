@@ -10,6 +10,7 @@ import com.aguang.jinjuback.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class MeiwenService {
     @Autowired
     MeiwenDao meiwenDao;
 
+    @Value("${qiniu.domainName}")
+    private String qiniuDomainName;
+
     /**
      * 创建金句
      * @param meiwen
@@ -32,6 +36,8 @@ public class MeiwenService {
         Result result = new Result();
         try {
             Long currentTime = DateUtils.getCurrentTime();
+
+            meiwen.setCoverImgUrl(qiniuDomainName + meiwen.getCoverImgUrl());
 
             meiwen.setUserId(userId);
             meiwen.setBrowseCount(0);
@@ -76,6 +82,29 @@ public class MeiwenService {
 
         Result result = new Result();
         result.setSuccess(pageInfo, "获取美文列表数据成功");
+        return result;
+    }
+
+    /**
+     * 获取美文详情
+     * @param id
+     * @param userId
+     * @return
+     */
+    public Result getMeiwen(Integer id, Integer userId) {
+        Result result = new Result();
+
+        try {
+            MeiwenInfo meiwen = meiwenDao.getMeiwen(id, userId);
+
+            // 阅读量+1
+            meiwenDao.increaseBrowse(id);
+
+            result.setSuccess(meiwen, "获取成功");
+        } catch (Exception e) {
+            result.setError("获取失败!");
+        }
+
         return result;
     }
 }
