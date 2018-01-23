@@ -20,8 +20,8 @@ public class UserController extends BaseController {
 
     public final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Value("${qiniu.domainName}")
-    private String qiniuDomainName;
+    @Value("${qiniu.jinjuDomainName}")
+    private String jinjuDomainName;
 
     @Autowired
     private UserService userService;
@@ -104,7 +104,7 @@ public class UserController extends BaseController {
         Result result = new Result();
 
         try {
-            photoUrl = qiniuDomainName + photoUrl;
+            photoUrl = jinjuDomainName + photoUrl;
 
             userService.updatePhotoUrl(getUserId(), photoUrl);
             result.setSuccess("头像更新成功!");

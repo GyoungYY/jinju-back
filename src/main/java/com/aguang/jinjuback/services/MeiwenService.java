@@ -23,8 +23,8 @@ public class MeiwenService {
     @Autowired
     MeiwenDao meiwenDao;
 
-    @Value("${qiniu.domainName}")
-    private String qiniuDomainName;
+    @Value("${qiniu.meiwenDomainName}")
+    private String meiwenDomainName;
 
     /**
      * 创建金句
@@ -37,7 +37,7 @@ public class MeiwenService {
         try {
             Long currentTime = DateUtils.getCurrentTime();
 
-            meiwen.setCoverImgUrl(qiniuDomainName + meiwen.getCoverImgUrl());
+            meiwen.setCoverImgUrl(meiwenDomainName + meiwen.getCoverImgUrl());
 
             meiwen.setUserId(userId);
             meiwen.setBrowseCount(0);
