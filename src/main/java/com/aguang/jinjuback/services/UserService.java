@@ -116,4 +116,9 @@ public class UserService {
 
         userDao.updatePhotoUrl(userId, photoUrl);
     }
+
+
+    public User getUserById(Integer userId) {
+        return userDao.getUserById(userId);
+    }
 }

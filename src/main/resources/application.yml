@@ -1,5 +1,6 @@
 server:
   port: 8888
+#  maxHttpHeaderSize: 8192
 
 spring:
   datasource:
@@ -25,11 +26,11 @@ qiniu:
   meiwenDomainName: http://p2wuhp1bg.bkt.clouddn.com/
 
 
-#logging:
-#  level:
-#    org:
-#      springframework: WARN
-#    spring:
-#      springboot:
-#        dao: DEBUG
+logging:
+  level:
+    org:
+      springframework: WARN
+    spring:
+      springboot:
+        dao: DEBUG
 
