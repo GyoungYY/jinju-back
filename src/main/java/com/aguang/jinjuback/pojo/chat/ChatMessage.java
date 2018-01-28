@@ -1,17 +1,34 @@
 package com.aguang.jinjuback.pojo.chat;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.List;
 
 public class ChatMessage {
 
+    private String id;
     private String userId;
     private String username;
     private String photoUrl;
     private String message;
-    // 1：正式消息  2：进入、退出提示消息
+    private Long createTime;
+    /* 消息类型:  1：聊天消息  2：进入、退出提示消息 */
     private String type;
 
+    /* 区分是否是游客 */
+    @JSONField(name = "isVisitor")
+    private Boolean isVisitor;
+
+    /* 在线用户列表 */
     private List<ChatUser> userList;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUserId() {
         return userId;
@@ -45,12 +62,28 @@ public class ChatMessage {
         this.message = message;
     }
 
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Boolean getIsVisitor() {
+        return isVisitor;
+    }
+
+    public void setIsVisitor(Boolean visitor) {
+        isVisitor = visitor;
     }
 
     public List<ChatUser> getUserList() {

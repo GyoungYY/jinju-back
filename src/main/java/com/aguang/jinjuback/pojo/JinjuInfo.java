@@ -1,12 +1,15 @@
 package com.aguang.jinjuback.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONType;
 
 import java.io.Serializable;
 
 /**
  * 返回页面的金句Info
  */
+@JSONType(orders={"jinjuId","type","content","upVoteCount","downVoteCount","collectCount","commentCount",
+        "upOrDownVote","isCollect","userId","username","photoUrl","createTime","updateTime"})
 public class JinjuInfo implements Serializable {
 
     // 金句id

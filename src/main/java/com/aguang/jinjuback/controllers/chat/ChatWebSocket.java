@@ -4,9 +4,13 @@ import com.aguang.jinjuback.model.User;
 import com.aguang.jinjuback.pojo.chat.ChatMessage;
 import com.aguang.jinjuback.pojo.chat.ChatUser;
 import com.aguang.jinjuback.services.UserService;
+import com.aguang.jinjuback.utils.ConvertUtils;
+import com.aguang.jinjuback.utils.DateUtils;
 import com.aguang.jinjuback.utils.SpringUtils;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -55,64 +59,46 @@ public class ChatWebSocket {
         User user1 = userService.getUserById(new Integer(userId));
 
         ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
+        // 设置消息类型为： 提示消息
+        chatMessage.setType("2");
+        chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
         if(user1 == null) {
+            chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
             chatMessage.setPhotoUrl(VISITOR_PHOTO);
             chatMessage.setMessage("游客"+userId+" 进入了聊天室...");
         } else {
+            chatMessage.setIsVisitor(false);
             chatMessage.setUsername(user1.getUsername());
             chatMessage.setPhotoUrl(user1.getPhotoUrl());
             chatMessage.setMessage(user1.getUsername() +" 进入了聊天室...");
         }
 
-
-
-//        chatMessage.setUsername("游客"+userId);
-//        chatMessage.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FqzcOdtAM96-Fe3ssizwDpMVCbiD");
-//        chatMessage.setMessage("游客"+userId+" 进入聊天室...");
-        chatMessage.setType("2");
-
-
-
-//        ChatUser chatUser = new ChatUser();
-//        chatUser.setUserId("1001");
-//        chatUser.setUsername("游客1");
-//        chatUser.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/qiniu.png");
-//
-//        ChatUser chatUser2 = new ChatUser();
-//        chatUser2.setUserId("1002");
-//        chatUser2.setUsername("游客2");
-//        chatUser2.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
-//
-//        ChatUser chatUser3 = new ChatUser();
-//        chatUser3.setUserId("1003");
-//        chatUser3.setUsername("游客3");
-//        chatUser3.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FtQYnIg235Jn1qRUTGrNl3N2pRXV");
-
         List<ChatUser> userList = new ArrayList<>();
-//        userList.add(chatUser);
-//        userList.add(chatUser2);
-//        userList.add(chatUser3);
+
         for (String userId2 : webSocketMap.keySet()) {
-            User user2 = userService.getUserById(new Integer(userId2));
+            User currentUser = userService.getUserById(new Integer(userId2));
 
             ChatUser chatUser = new ChatUser();
             chatUser.setUserId(userId2);
 
-            if(user2 == null) {
+            // 用户为空时，为判断为游客
+            if(currentUser == null) {
+                chatUser.setIsVisitor(true);
                 chatUser.setUsername("游客" + userId2);
                 chatUser.setPhotoUrl(VISITOR_PHOTO);
             } else {
-                chatUser.setUsername(user2.getUsername());
-                chatUser.setPhotoUrl(user2.getPhotoUrl());
+                chatUser.setIsVisitor(false);
+                chatUser.setUsername(currentUser.getUsername());
+                chatUser.setPhotoUrl(currentUser.getPhotoUrl());
             }
             userList.add(chatUser);
         }
 
         chatMessage.setUserList(userList);
-
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
@@ -128,108 +114,6 @@ public class ChatWebSocket {
 
         System.out.println(userId + "进入聊天室");
         System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
-    }
-
-    /**
-     * 连接关闭调用的方法
-     */
-    @OnClose
-    public void onClose(Session session) {
-        Map<String, String> map = session.getPathParameters();
-        webSocketMap.remove(map.get("userId")); //从set中删除
-        for (String user : webSocketMap.keySet()) {
-            System.out.println(user);
-        }
-        subOnlineCount(); //在线数减
-
-        String userId = map.get("userId");
-
-
-        UserService userService = (UserService)SpringUtils.getBean("userService");
-
-        User user1 = userService.getUserById(new Integer(userId));
-
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setUserId(userId);
-        chatMessage.setType("2");
-
-        if(user1 == null) {
-            chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(VISITOR_PHOTO);
-            chatMessage.setMessage("游客"+userId+" 离开了聊天室...");
-        } else {
-            chatMessage.setUsername(user1.getUsername());
-            chatMessage.setPhotoUrl(user1.getPhotoUrl());
-            chatMessage.setMessage(user1.getUsername() +" 离开了聊天室...");
-        }
-
-//        chatMessage.setUserId(userId);
-//        chatMessage.setUsername("游客"+userId);
-//        chatMessage.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
-//        chatMessage.setMessage("游客"+userId+" 离开了聊天室...");
-//        chatMessage.setType("2");
-//
-//        ChatUser chatUser = new ChatUser();
-//        chatUser.setUserId("1001");
-//        chatUser.setUsername("游客1");
-//        chatUser.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/qiniu.png");
-//
-//        ChatUser chatUser2 = new ChatUser();
-//        chatUser2.setUserId("1002");
-//        chatUser2.setUsername("游客2");
-//        chatUser2.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FgD_kc3J6DT5I8Zq0dggaQgN6j43");
-//
-//        ChatUser chatUser3 = new ChatUser();
-//        chatUser3.setUserId("1003");
-//        chatUser3.setUsername("游客3");
-//        chatUser3.setPhotoUrl("http://p2g5cb64g.bkt.clouddn.com/FtQYnIg235Jn1qRUTGrNl3N2pRXV");
-//
-//        List<ChatUser> userList = new ArrayList<>();
-//        userList.add(chatUser);
-//        userList.add(chatUser2);
-//        userList.add(chatUser3);
-//        chatMessage.setUserList(userList);
-
-        List<ChatUser> userList = new ArrayList<>();
-//        userList.add(chatUser);
-//        userList.add(chatUser2);
-//        userList.add(chatUser3);
-        for (String userId2 : webSocketMap.keySet()) {
-            User user2 = userService.getUserById(new Integer(userId2));
-
-            ChatUser chatUser = new ChatUser();
-            chatUser.setUserId(userId2);
-
-            if(user2 == null) {
-                chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl(VISITOR_PHOTO);
-            } else {
-                chatUser.setUsername(user2.getUsername());
-                chatUser.setPhotoUrl(user2.getPhotoUrl());
-            }
-            userList.add(chatUser);
-        }
-
-        chatMessage.setUserList(userList);
-
-
-        String chatMessageJson = JSON.toJSONString(chatMessage);
-
-        for (String user : webSocketMap.keySet()) {
-            try {
-//                sendMessage(user + "你好，我是" + userId + "   " + message, webSocketMap.get(user));
-                sendMessage(chatMessageJson, webSocketMap.get(user));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-
-
-
-
-        System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -249,12 +133,18 @@ public class ChatWebSocket {
         User currentUser = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
+        // 设置消息类型为： 提示消息
+        chatMessage.setType("1");
+        chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
         if(currentUser == null) {
+            chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
             chatMessage.setPhotoUrl(VISITOR_PHOTO);
         } else {
+            chatMessage.setIsVisitor(false);
             chatMessage.setUsername(currentUser.getUsername());
             chatMessage.setPhotoUrl(currentUser.getPhotoUrl());
         }
@@ -264,14 +154,88 @@ public class ChatWebSocket {
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
+        svaeToRedis(chatMessageJson);
+
         for (String user : webSocketMap.keySet()) {
             try {
-//                sendMessage(user + "你好，我是" + userId + "   " + message, webSocketMap.get(user));
                 sendMessage(chatMessageJson, webSocketMap.get(user));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 连接关闭调用的方法
+     */
+    @OnClose
+    public void onClose(Session session) {
+        Map<String, String> map = session.getPathParameters();
+        webSocketMap.remove(map.get("userId")); //从set中删除
+        for (String user : webSocketMap.keySet()) {
+            System.out.println(user);
+        }
+        subOnlineCount(); //在线数减
+
+        String userId = map.get("userId");
+
+        User user1 = getUserById(userId);
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setId(ConvertUtils.getUUID());
+        chatMessage.setUserId(userId);
+        // 设置消息类型为： 提示消息
+        chatMessage.setType("2");
+        chatMessage.setCreateTime(DateUtils.getCurrentTime());
+
+        if(user1 == null) {
+            chatMessage.setIsVisitor(true);
+            chatMessage.setUsername("游客" + userId);
+            chatMessage.setPhotoUrl(VISITOR_PHOTO);
+            chatMessage.setMessage("游客"+userId+" 离开了聊天室...");
+        } else {
+            chatMessage.setIsVisitor(false);
+            chatMessage.setUsername(user1.getUsername());
+            chatMessage.setPhotoUrl(user1.getPhotoUrl());
+            chatMessage.setMessage(user1.getUsername() +" 离开了聊天室...");
+        }
+
+        List<ChatUser> userList = new ArrayList<>();
+
+        for (String userId2 : webSocketMap.keySet()) {
+            User currentUser = getUserById(userId2);
+
+            ChatUser chatUser = new ChatUser();
+            chatUser.setUserId(userId2);
+
+            // 用户为空时，为判断为游客
+            if(currentUser == null) {
+                chatUser.setIsVisitor(true);
+                chatUser.setUsername("游客" + userId2);
+                chatUser.setPhotoUrl(VISITOR_PHOTO);
+            } else {
+                chatUser.setIsVisitor(false);
+                chatUser.setUsername(currentUser.getUsername());
+                chatUser.setPhotoUrl(currentUser.getPhotoUrl());
+            }
+            userList.add(chatUser);
+        }
+
+        chatMessage.setUserList(userList);
+
+
+        String chatMessageJson = JSON.toJSONString(chatMessage);
+
+        // 群发消息
+        for (String user : webSocketMap.keySet()) {
+            try {
+                sendMessage(chatMessageJson, webSocketMap.get(user));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -298,6 +262,23 @@ public class ChatWebSocket {
         }
     }
 
+    /**
+     * 群发信息
+     * @param message
+     * @param session
+     * @throws IOException
+     */
+    public void sendMassMessage(String message, Session session) throws IOException {
+//        for (String user : webSocketMap.keySet()) {
+//            try {
+//                System.out.println(user);
+//                System.out.println("关闭发送： " + chatMessageJson);
+//                sendMessage(chatMessageJson, webSocketMap.get(user));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+    }
 
     public static synchronized int getOnlineCount() {
         return ONLINE_COUNT;
@@ -319,7 +300,26 @@ public class ChatWebSocket {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
+
+    private void svaeToRedis(String message) {
+        JedisPool jedisPool = (JedisPool)SpringUtils.getBean("jedisPool");
+
+        Jedis jedis = null;
+
+        try {
+            jedis = jedisPool.getResource();
+
+            jedis.lpush("chat", message);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (jedis != null) {
+                //关闭连接
+                jedis.close();
+            }
+        }
+    }
+
 }
