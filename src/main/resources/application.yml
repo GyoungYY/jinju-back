@@ -29,7 +29,7 @@ qiniu:
 logging:
   level:
     org:
-      springframework: WARN
+      springframework: INFO
     spring:
       springboot:
         dao: DEBUG
