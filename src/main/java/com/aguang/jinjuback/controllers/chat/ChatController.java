@@ -53,15 +53,25 @@ public class ChatController {
      * @return
      */
     @GetMapping("/getHistoryMessage")
-    public Result getHistoryMessage(@RequestParam(value = "limit", defaultValue = "20") Integer limit) {
+    public Result getHistoryMessage(@RequestParam(value = "pageIndex", defaultValue = "1") Integer pageIndex,
+                                    @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
+
         Result result = new Result();
+
+        if(pageIndex <1) {
+            result.setError("pageIndex必须大于0");
+            return result;
+        }
+
+        Integer start = (pageIndex - 1) * pageSize;
+        Integer end = pageIndex * pageSize;
 
         Jedis jedis = null;
         List<String> chatMessages = null;
 
         try {
             jedis = jedisPool.getResource();
-            chatMessages = jedis.lrange("chat", 0, limit);
+            chatMessages = jedis.lrange("chat", start, end);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

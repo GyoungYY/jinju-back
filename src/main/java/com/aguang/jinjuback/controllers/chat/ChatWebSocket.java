@@ -27,36 +27,29 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatWebSocket {
 
     public static final String VISITOR_PHOTO = "http://p2g5cb64g.bkt.clouddn.com/FqzcOdtAM96-Fe3ssizwDpMVCbiD";
-//    @Resource
-//    private Webcomment webcomment;
 
 //    @Autowired
 //    private UserService userService;
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     public static int ONLINE_COUNT = 0;
-    //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
-//    private static CopyOnWriteArraySet<ChatWebSocket> webSocketSet = new CopyOnWriteArraySet<ChatWebSocket>();
-    //线程安全的Map
+
+    // 存放userId和Session
     public static ConcurrentHashMap<String, Session> webSocketMap = new ConcurrentHashMap<String, Session>();//建立连接的方法
 
+    /**
+     * 连接打开的方法
+     * @param session
+     * @param userId
+     */
     @OnOpen
     public void onOpen(Session session, @PathParam("userId") String userId) {
         System.out.println("onOpen");
-        // , @PathParam("userId") String userId
-//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//        Integer userId1 = (Integer) request.getSession().getAttribute("userId");
-//        String userId = userId1 + "";
-        /*获取从/websocket开始的整条链接，用于获取userId？***=***的参数
-        String uri = session.getRequestURI().toString();*/
 
-//        User user = userService.getUserById(335);
         webSocketMap.put(userId, session);
         addOnlineCount(); //在线数加
 
-        UserService userService = (UserService)SpringUtils.getBean("userService");
-
-        User user1 = userService.getUserById(new Integer(userId));
+        User user1 = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setId(ConvertUtils.getUUID());
@@ -80,7 +73,7 @@ public class ChatWebSocket {
         List<ChatUser> userList = new ArrayList<>();
 
         for (String userId2 : webSocketMap.keySet()) {
-            User currentUser = userService.getUserById(new Integer(userId2));
+            User currentUser = getUserById(userId2);
 
             ChatUser chatUser = new ChatUser();
             chatUser.setUserId(userId2);
@@ -152,10 +145,13 @@ public class ChatWebSocket {
         chatMessage.setMessage(message);
         chatMessage.setType("1");
 
+        // 将消息对象转换出json
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
-        svaeToRedis(chatMessageJson);
+        // 将发送的消息存值redis
+        saveToRedis(chatMessageJson);
 
+        // 群发信息
         for (String user : webSocketMap.keySet()) {
             try {
                 sendMessage(chatMessageJson, webSocketMap.get(user));
@@ -167,6 +163,7 @@ public class ChatWebSocket {
 
     /**
      * 连接关闭调用的方法
+     * @param session
      */
     @OnClose
     public void onClose(Session session) {
@@ -240,7 +237,6 @@ public class ChatWebSocket {
 
     /**
      * 发生错误时调用
-     *
      * @param session
      * @param error
      */
@@ -303,7 +299,7 @@ public class ChatWebSocket {
         return null;
     }
 
-    private void svaeToRedis(String message) {
+    private void saveToRedis(String message) {
         JedisPool jedisPool = (JedisPool)SpringUtils.getBean("jedisPool");
 
         Jedis jedis = null;
