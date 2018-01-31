@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aguang.jinjuback.dao.chat.ChatDao">
 
+    <!--  -->
+    <insert id="createChatMessage" parameterType="com.aguang.jinjuback.pojo.chat.ChatMessage">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO `chat_message`
+          (user_id, username, photo_url, type, message, is_visitor, is_show_time, create_time)
+        VALUES
+          (#{userId}, #{username}, #{photoUrl}, #{type}, #{message}, #{isVisitor}, #{isShowTime}, #{createTime})
+    </insert>
+
     <!-- 查询聊天室历史消息 -->
     <select id="findChatMessage" resultType="com.aguang.jinjuback.pojo.chat.ChatMessage">
         SELECT

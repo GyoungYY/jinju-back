@@ -95,7 +95,7 @@ public class ChatWebSocket {
         chatMessage.setUserList(userList);
 
         Integer id = saveToDB(chatMessage);
-        chatMessage.setId(id);
+//        chatMessage.setId(id);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
@@ -165,7 +165,7 @@ public class ChatWebSocket {
 //        saveToRedis(chatMessageJson);
 
         Integer id = saveToDB(chatMessage);
-        chatMessage.setId(id);
+//        chatMessage.setId(id);
 
         // 将消息对象转换出json
         String chatMessageJson = JSON.toJSONString(chatMessage);
@@ -241,7 +241,7 @@ public class ChatWebSocket {
         chatMessage.setUserList(userList);
 
         Integer id = saveToDB(chatMessage);
-        chatMessage.setId(id);
+//        chatMessage.setId(id);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
@@ -290,15 +290,15 @@ public class ChatWebSocket {
      * @throws IOException
      */
     public void sendMassMessage(String message, Session session) throws IOException {
-//        for (String user : webSocketMap.keySet()) {
-//            try {
-//                System.out.println(user);
-//                System.out.println("关闭发送： " + chatMessageJson);
-//                sendMessage(chatMessageJson, webSocketMap.get(user));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        for (String user : webSocketMap.keySet()) {
+            try {
+                System.out.println(user);
+                System.out.println("关闭发送： " + message);
+                sendMessage(message, webSocketMap.get(user));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static synchronized int getOnlineCount() {
@@ -319,7 +319,7 @@ public class ChatWebSocket {
      * @return
      */
     private User getUserById(String userId) {
-        UserService userService = (UserService)SpringUtils.getBean("userService");
+        UserService userService = SpringUtils.getBean("userService");
 
         try {
             return userService.getUserById(new Integer(userId));
@@ -334,7 +334,7 @@ public class ChatWebSocket {
      * @param message
      */
     private void saveToRedis(String message) {
-        JedisPool jedisPool = (JedisPool)SpringUtils.getBean("jedisPool");
+        JedisPool jedisPool = SpringUtils.getBean("jedisPool");
 
         Jedis jedis = null;
 
@@ -358,7 +358,7 @@ public class ChatWebSocket {
      * @return
      */
     private Integer saveToDB(ChatMessage chatMessage) {
-        ChatService chatService = (ChatService)SpringUtils.getBean("chatService");
+        ChatService chatService = SpringUtils.getBean("chatService");
 
         return chatService.createChatMessage(chatMessage);
     }
@@ -368,7 +368,7 @@ public class ChatWebSocket {
      * @return
      */
     private boolean isNeedShowTime() {
-        ChatService chatService = (ChatService)SpringUtils.getBean("chatService");
+        ChatService chatService = SpringUtils.getBean("chatService");
 
         try {
             return chatService.isNeedShowTime();
