@@ -9,8 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDao {
 
-    @Insert("INSERT INTO jinju_db.jj_user(username,password,create_time,update_time) VALUES(#{username},#{password},#{curTime},#{curTime})")
-    void createUser(@Param("username") String username,@Param("password") String password,@Param("curTime") Long curTime);
+    @Insert("INSERT INTO jinju_db.jj_user(username,password,photo_url,create_time,update_time) VALUES(#{username},#{password},#{photoUrl},#{curTime},#{curTime})")
+    void createUser(@Param("username") String username,
+                    @Param("password") String password,
+                    @Param("photoUrl")String photoUrl,
+                    @Param("curTime") Long curTime);
 
     @Select("SELECT * FROM jinju_db.jj_user WHERE user_id = #{id}")
     User getUser(@Param("id") int id);

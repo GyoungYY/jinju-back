@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aguang.jinjuback.dao.chat.ChatDao">
+
+    <!-- 查询聊天室历史消息 -->
+    <select id="findChatMessage" resultType="com.aguang.jinjuback.pojo.chat.ChatMessage">
+        SELECT
+          *
+        FROM
+          `chat_message` t
+    <if test="id != null">
+        WHERE
+          t.id &lt; #{id}
+    </if>
+
+        order by t.id desc
+
+        limit #{limit}
+    </select>
+
+</mapper>

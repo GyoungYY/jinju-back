@@ -25,6 +25,9 @@ qiniu:
   jinjuDomainName: http://p2g5cb64g.bkt.clouddn.com/
   meiwenDomainName: http://p2wuhp1bg.bkt.clouddn.com/
 
+jinju:
+  defaultPhotoUrl: http://p2g5cb64g.bkt.clouddn.com/FqzcOdtAM96-Fe3ssizwDpMVCbiD
+
 
 logging:
   level:

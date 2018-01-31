@@ -6,27 +6,37 @@ import java.util.List;
 
 public class ChatMessage {
 
-    private String id;
+    private Integer id;
+
     private String userId;
+
     private String username;
+
     private String photoUrl;
+
     private String message;
-    private Long createTime;
+
     /* 消息类型:  1：聊天消息  2：进入、退出提示消息 */
-    private String type;
+    private Integer type;
 
     /* 区分是否是游客 */
     @JSONField(name = "isVisitor")
     private Boolean isVisitor;
 
+    /* 区分是否需要显示时间 */
+    @JSONField(name = "isShowTime")
+    private Boolean isShowTime;
+
+    private Long createTime;
+
     /* 在线用户列表 */
     private List<ChatUser> userList;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -70,11 +80,11 @@ public class ChatMessage {
         this.createTime = createTime;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -84,6 +94,14 @@ public class ChatMessage {
 
     public void setIsVisitor(Boolean visitor) {
         isVisitor = visitor;
+    }
+
+    public Boolean getIsShowTime() {
+        return isShowTime;
+    }
+
+    public void setIsShowTime(Boolean isShowTime) {
+        this.isShowTime = isShowTime;
     }
 
     public List<ChatUser> getUserList() {

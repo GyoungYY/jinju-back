@@ -6,6 +6,7 @@ import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.UserInfo;
 import com.aguang.jinjuback.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,9 @@ public class UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Value("${jinju.defaultPhotoUrl}")
+    private String defaultPhotoUrl;
 
     /**
      * 注册用户
@@ -25,7 +29,7 @@ public class UserService {
         User user = userDao.getUserByUsername(username);
         if (user == null) {
             Long curTime = DateUtils.getCurrentTime();
-            userDao.createUser(username, password, curTime);
+            userDao.createUser(username, password, defaultPhotoUrl, curTime);
             result.setSuccess("注册成功");
             return result;
         }
