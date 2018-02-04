@@ -1,7 +1,8 @@
 package com.aguang.jinjuback.dao;
 
-import com.aguang.jinjuback.model.Comment;
 import com.aguang.jinjuback.model.Jinju;
+import com.aguang.jinjuback.model.JinjuComment;
+import com.aguang.jinjuback.pojo.JinjuCommentInfo;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -114,7 +115,7 @@ public interface JinjuDao {
      * 创建评论
      * @param comment
      */
-    void createComment(Comment comment);
+    void createComment(JinjuComment comment);
 
     /**
      * 金句的评论总数加1
@@ -134,7 +135,7 @@ public interface JinjuDao {
      * 获取评论列表
      * @return
      */
-    ArrayList<Comment> listCommentByPage(@Param("m") int m, @Param("n") int n, @Param("jinjuId") Integer jinjuId, @Param("parentId") Integer parentId);
+    ArrayList<JinjuCommentInfo> listCommentByPage(@Param("m") int m, @Param("n") int n, @Param("jinjuId") Integer jinjuId, @Param("parentId") Integer parentId);
 
     /**
      * 获取评论总数

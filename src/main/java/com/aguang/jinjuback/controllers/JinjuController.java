@@ -1,7 +1,7 @@
 package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
-import com.aguang.jinjuback.model.Comment;
+import com.aguang.jinjuback.model.JinjuComment;
 import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
@@ -88,7 +88,7 @@ public class JinjuController extends BaseController {
      * @return
      */
     @PostMapping("/comment/create")
-    public Result createComment(@RequestBody  @Valid Comment comment, BindingResult bindingResult) {
+    public Result createComment(@RequestBody  @Valid JinjuComment comment, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             Result result = new Result();
             result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());

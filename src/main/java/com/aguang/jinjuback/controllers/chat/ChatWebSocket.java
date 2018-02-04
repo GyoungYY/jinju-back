@@ -52,13 +52,13 @@ public class ChatWebSocket {
         User user1 = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
-//        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
         // 设置消息类型为： 提示消息
         chatMessage.setType(2);
         chatMessage.setIsShowTime(false);
         chatMessage.setCreateTime(DateUtils.getCurrentTime());
 
+        // 判断是登录用户还是游客
         if(user1 == null) {
             chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
@@ -71,31 +71,10 @@ public class ChatWebSocket {
             chatMessage.setMessage(user1.getUsername() +" 进入了聊天室...");
         }
 
-        List<ChatUser> userList = new ArrayList<>();
+        chatMessage.setUserList(getChatUserList());
 
-        for (String userId2 : webSocketMap.keySet()) {
-            User currentUser = getUserById(userId2);
-
-            ChatUser chatUser = new ChatUser();
-            chatUser.setUserId(userId2);
-
-            // 用户为空时，为判断为游客
-            if(currentUser == null) {
-                chatUser.setIsVisitor(true);
-                chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl(VISITOR_PHOTO);
-            } else {
-                chatUser.setIsVisitor(false);
-                chatUser.setUsername(currentUser.getUsername());
-                chatUser.setPhotoUrl(currentUser.getPhotoUrl());
-            }
-            userList.add(chatUser);
-        }
-
-        chatMessage.setUserList(userList);
-
-        Integer id = saveToDB(chatMessage);
-//        chatMessage.setId(id);
+        // 将消息保存到数据库
+        saveToDB(chatMessage);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
@@ -133,7 +112,6 @@ public class ChatWebSocket {
         User currentUser = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
-//        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
         // 设置消息类型为： 提示消息
         chatMessage.setType(1);
@@ -164,8 +142,8 @@ public class ChatWebSocket {
         // 将发送的消息存值redis
 //        saveToRedis(chatMessageJson);
 
-        Integer id = saveToDB(chatMessage);
-//        chatMessage.setId(id);
+        // 将消息保存到数据库
+        saveToDB(chatMessage);
 
         // 将消息对象转换出json
         String chatMessageJson = JSON.toJSONString(chatMessage);
@@ -198,7 +176,6 @@ public class ChatWebSocket {
         User user1 = getUserById(userId);
 
         ChatMessage chatMessage = new ChatMessage();
-//        chatMessage.setId(ConvertUtils.getUUID());
         chatMessage.setUserId(userId);
         // 设置消息类型为： 提示消息
         chatMessage.setType(2);
@@ -217,31 +194,10 @@ public class ChatWebSocket {
             chatMessage.setMessage(user1.getUsername() +" 离开了聊天室...");
         }
 
-        List<ChatUser> userList = new ArrayList<>();
+        chatMessage.setUserList(getChatUserList());
 
-        for (String userId2 : webSocketMap.keySet()) {
-            User currentUser = getUserById(userId2);
-
-            ChatUser chatUser = new ChatUser();
-            chatUser.setUserId(userId2);
-
-            // 用户为空时，为判断为游客
-            if(currentUser == null) {
-                chatUser.setIsVisitor(true);
-                chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl(VISITOR_PHOTO);
-            } else {
-                chatUser.setIsVisitor(false);
-                chatUser.setUsername(currentUser.getUsername());
-                chatUser.setPhotoUrl(currentUser.getPhotoUrl());
-            }
-            userList.add(chatUser);
-        }
-
-        chatMessage.setUserList(userList);
-
-        Integer id = saveToDB(chatMessage);
-//        chatMessage.setId(id);
+        // 将消息保存到数据库
+        saveToDB(chatMessage);
 
         String chatMessageJson = JSON.toJSONString(chatMessage);
 
@@ -327,6 +283,35 @@ public class ChatWebSocket {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 获取聊天室中的用户列表
+     * @return
+     */
+    private List<ChatUser> getChatUserList() {
+        List<ChatUser> userList = new ArrayList<>();
+
+        for (String userId2 : webSocketMap.keySet()) {
+            User currentUser = getUserById(userId2);
+
+            ChatUser chatUser = new ChatUser();
+            chatUser.setUserId(userId2);
+
+            // 用户为空时，为判断为游客
+            if(currentUser == null) {
+                chatUser.setIsVisitor(true);
+                chatUser.setUsername("游客" + userId2);
+                chatUser.setPhotoUrl(VISITOR_PHOTO);
+            } else {
+                chatUser.setIsVisitor(false);
+                chatUser.setUsername(currentUser.getUsername());
+                chatUser.setPhotoUrl(currentUser.getPhotoUrl());
+            }
+            userList.add(chatUser);
+        }
+
+        return userList;
     }
 
     /**

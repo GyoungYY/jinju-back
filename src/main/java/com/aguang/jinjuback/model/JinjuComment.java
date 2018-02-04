@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 /**
  * 评论表(jj_comment)
  */
-public class Comment {
+public class JinjuComment {
 
     /* 主键 */
     private Integer id;

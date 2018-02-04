@@ -1,7 +1,10 @@
 package com.aguang.jinjuback.services;
 
+import com.aguang.jinjuback.configuration.CustomException;
 import com.aguang.jinjuback.dao.MeiwenDao;
 import com.aguang.jinjuback.model.Meiwen;
+import com.aguang.jinjuback.model.MeiwenComment;
+import com.aguang.jinjuback.pojo.MeiwenCommentInfo;
 import com.aguang.jinjuback.pojo.MeiwenInfo;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.common.PageInfo;
@@ -12,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 
@@ -103,6 +108,88 @@ public class MeiwenService {
             result.setSuccess(meiwen, "获取成功");
         } catch (Exception e) {
             result.setError("获取失败!");
+        }
+
+        return result;
+    }
+
+    /**
+     * 创建评论
+     * @param comment
+     * @return
+     */
+    @Transactional
+    public Result createComment(MeiwenComment comment, Integer userId) {
+
+        Result result = new Result();
+        try {
+
+            comment.setUserId(userId);
+            comment.setCreateTime(DateUtils.getCurrentTime());
+
+            // 如果ParentId为空，则代表的是一级评论，将ParentId设置为0
+//            if(comment.getParentId()==null || comment.getParentId().equals(0)) {
+//                comment.setParentId(0);
+
+                // 金句的评论总数加1
+                Integer affectCount = meiwenDao.increaseMeiwenComment(comment.getMeiwenId());
+                if(affectCount == 0) {
+                    throw new CustomException("美文不存在，不可评论!");
+                }
+
+//            } else {
+//
+//                // 一级评论的评论总数加1
+//                Integer affectCount = jinjuDao.increaseComment(comment.getParentId());
+//
+//                if(affectCount == 0) {
+//                    throw new CustomException("一级评论不存在，不可评论!");
+//                }
+//
+//            }
+
+            meiwenDao.createMeiwenComment(comment);
+
+            result.setSuccess("操作成功!");
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            result.setError("操作失败");
+            if(e instanceof CustomException) {
+                result.setError(e.getMessage());
+            }
+            logger.error("操作失败!", e);
+        }
+        return result;
+    }
+
+    /**
+     * 获取评论列表
+     * @param meiwenId
+     * @param parentId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public Result listComment(Integer meiwenId, Integer parentId, int pageIndex, int pageSize) {
+
+        Result result = new Result();
+
+        try {
+            if(parentId == null) {
+                parentId = 0;
+            }
+
+            Integer m = (pageIndex - 1) * pageSize;
+            ArrayList<MeiwenCommentInfo> list = meiwenDao.listMeiwenCommentByPage(m, pageSize, meiwenId, parentId);
+
+            Integer total = meiwenDao.listCommentCount(meiwenId, parentId);
+
+            PageInfo<MeiwenCommentInfo> pageInfo = new PageInfo(total, list);
+
+            result.setSuccess(pageInfo, "评论列表数据获取成功");
+        } catch (Exception e) {
+            result.setError("评论列表数据获取失败");
+            logger.error("操作失败!", e);
         }
 
         return result;

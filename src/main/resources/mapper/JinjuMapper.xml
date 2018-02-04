@@ -115,7 +115,7 @@
     </insert>
 
     <!-- 获取评论列表 -->
-    <select id="listCommentByPage" resultType="com.aguang.jinjuback.pojo.CommentInfo">
+    <select id="listCommentByPage" resultType="com.aguang.jinjuback.pojo.JinjuCommentInfo">
         SELECT
             c.id,
             c.jinju_id,

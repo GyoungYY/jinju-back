@@ -2,6 +2,7 @@ package com.aguang.jinjuback.controllers;
 
 import com.aguang.jinjuback.controllers.base.BaseController;
 import com.aguang.jinjuback.model.Meiwen;
+import com.aguang.jinjuback.model.MeiwenComment;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.services.MeiwenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,39 @@ public class MeiwenController extends BaseController {
     }
 
     /**
-     * 获取金句信息
+     * 获取美文信息
      * @param id
      * @return
      */
     @GetMapping("/get/{id}")
-    public Result getJinju(@PathVariable("id") Integer id) {
+    public Result getMeiwen(@PathVariable("id") Integer id) {
         return meiwenService.getMeiwen(id, getUserId());
+    }
+
+    /**
+     * 创建评论
+     * @return
+     */
+    @PostMapping("/comment/create")
+    public Result createComment(@RequestBody  @Valid MeiwenComment comment, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Result result = new Result();
+            result.setError(null, bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return result;
+        }
+        return meiwenService.createComment(comment, getUserId());
+    }
+
+    /**
+     * 获取评论列表
+     * @return
+     */
+    @GetMapping("/comment/list")
+    public Result listComment(@RequestParam(value = "pageIndex", defaultValue = "1") int pageIndex,
+                              @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+                              @RequestParam("meiwenId") Integer meiwenId,
+                              @RequestParam(value = "parentId", required = false) Integer parentId) {
+
+        return meiwenService.listComment(meiwenId, parentId, pageIndex, pageSize);
     }
 }

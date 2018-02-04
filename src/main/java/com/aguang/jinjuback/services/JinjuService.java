@@ -2,8 +2,9 @@ package com.aguang.jinjuback.services;
 
 import com.aguang.jinjuback.configuration.CustomException;
 import com.aguang.jinjuback.dao.JinjuDao;
-import com.aguang.jinjuback.model.Comment;
+import com.aguang.jinjuback.model.JinjuComment;
 import com.aguang.jinjuback.model.Jinju;
+import com.aguang.jinjuback.pojo.JinjuCommentInfo;
 import com.aguang.jinjuback.pojo.JinjuInfo;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.common.PageInfo;
@@ -255,7 +256,7 @@ public class JinjuService {
      * @return
      */
     @Transactional
-    public Result createComment(Comment comment, Integer userId) {
+    public Result createComment(JinjuComment comment, Integer userId) {
 
         Result result = new Result();
         try {
@@ -319,11 +320,11 @@ public class JinjuService {
             }
 
             Integer m = (pageIndex - 1) * pageSize;
-            ArrayList<Comment> list = jinjuDao.listCommentByPage(m, pageSize, jinjuId, parentId);
+            ArrayList<JinjuCommentInfo> list = jinjuDao.listCommentByPage(m, pageSize, jinjuId, parentId);
 
             Integer total = jinjuDao.listCommentCount(jinjuId, parentId);
 
-            PageInfo<Comment> pageInfo = new PageInfo(total, list);
+            PageInfo<JinjuComment> pageInfo = new PageInfo(total, list);
 
             result.setSuccess(pageInfo, "评论列表数据获取成功");
         } catch (Exception e) {

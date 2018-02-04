@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 返回页面的评论Info
  */
-public class CommentInfo implements Serializable {
+public class JinjuCommentInfo implements Serializable {
 
     // 金句类型
     private Integer id;

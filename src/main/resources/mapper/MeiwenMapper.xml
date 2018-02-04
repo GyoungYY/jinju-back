@@ -93,4 +93,30 @@
         order by m.create_time desc
     </select>
 
+    <!-- 创建美文评论 -->
+    <insert id="createMeiwenComment">
+        INSERT INTO jinju_db.mw_comment(meiwen_id,user_id,content,create_time)
+        VALUES(#{meiwenId},#{userId},#{content},#{createTime});
+    </insert>
+
+    <!-- 获取评论列表 -->
+    <select id="listMeiwenCommentByPage" resultType="com.aguang.jinjuback.pojo.MeiwenCommentInfo">
+        SELECT
+            m.id,
+            m.meiwen_id,
+            m.content,
+            m.create_time,
+            u.user_id,
+            u.username,
+            u.photo_url
+        FROM
+          mw_comment m
+        LEFT JOIN jj_user u ON m.user_id = u.user_id
+        WHERE m.meiwen_id = #{meiwenId}
+
+        order by m.create_time desc
+
+        LIMIT #{m},#{n}
+    </select>
+
 </mapper>
