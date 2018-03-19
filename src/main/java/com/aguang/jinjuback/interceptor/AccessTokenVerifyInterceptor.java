@@ -1,11 +1,9 @@
 package com.aguang.jinjuback.interceptor;
 
 import com.aguang.jinjuback.services.UserService;
-import com.aguang.jinjuback.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -38,20 +36,21 @@ public class AccessTokenVerifyInterceptor extends HandlerInterceptorAdapter {
                 || requestURL.contains("/comment/list")
                 || requestURL.contains("/area/list")
                 || requestURL.contains("/chat")
+                || requestURL.contains("/meiwen/comment/list")
         ) ) {
-            if (StringUtils.isBlank(userId)) {
-                flag = false;
-            } else {
-                if (!userService.hasUser(userId)) {
-                    flag = false;
-                }
-            }
-
-            if (!flag) {
-                response.setStatus(HttpStatus.FORBIDDEN.value());
-                response.setContentType("application/json");
-                response.getWriter().print("{\"code\":403, \"message\":\"please login\"}");
-            }
+//            if (StringUtils.isBlank(userId)) {
+//                flag = false;
+//            } else {
+//                if (!userService.hasUser(userId)) {
+//                    flag = false;
+//                }
+//            }
+//
+//            if (!flag) {
+//                response.setStatus(HttpStatus.FORBIDDEN.value());
+//                response.setContentType("application/json");
+//                response.getWriter().print("{\"code\":403, \"message\":\"please login\"}");
+//            }
         }
 
         return flag;

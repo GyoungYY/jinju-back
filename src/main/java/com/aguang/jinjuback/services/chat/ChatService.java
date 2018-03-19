@@ -17,7 +17,7 @@ public class ChatService {
 	public final static Logger logger = LoggerFactory.getLogger(ChatService.class);
 
 	/* 游客id */
-	public static Integer visitorId = 10000;
+	public static Long localVisitorId = 10000L;
 
 	@Autowired
 	private JedisPool jedisPool;
@@ -29,13 +29,35 @@ public class ChatService {
 	 * 获取下一个id
 	 * @return
 	 */
-	public Integer nextVisitorId() {
+	public Long nextVisitorId() {
 
-		if(visitorId == 99999) {
-			visitorId = 10000;
-		} else {
-			visitorId++;
+		Jedis jedis = null;
+        Long visitorId = null;
+
+		try {
+			jedis = jedisPool.getResource();
+
+            if(jedis.get("VISITOR_ID") == null) {
+                jedis.set("VISITOR_ID", "10001");
+                visitorId = 10001L;
+            } else {
+                visitorId = jedis.incrBy("VISITOR_ID", 1L);
+            }
+
+        } catch (Exception ex) {
+			logger.error("错误", ex);
+			throw new CustomException("Redis连接错误");
+		} finally {
+			if (jedis != null) {
+				//关闭连接
+				jedis.close();
+			}
 		}
+
+		if(visitorId == null) {
+            visitorId = localVisitorId++;
+        }
+
 		return visitorId;
 	}
 
