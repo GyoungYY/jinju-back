@@ -7,11 +7,13 @@ import com.aguang.jinjuback.pojo.admin.AdJinjuInfo;
 import com.aguang.jinjuback.pojo.constants.JinjuTypeConstant;
 import com.aguang.jinjuback.services.AreaInfoService;
 import com.aguang.jinjuback.services.JinjuService;
+import com.aguang.jinjuback.utils.PropertieUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,9 @@ public class AdJinjuService {
     @Autowired
     private JinjuService jinjuService;
 
+    @Autowired
+    private JedisPool jedisPool;
+
     /**
      * 查询列表
      * @param pageIndex
@@ -37,6 +42,10 @@ public class AdJinjuService {
         Integer m = (pageIndex - 1) * pageSize;
 
         ArrayList<AdJinjuInfo> list = jinjuDao.listByPage(m, pageSize);
+
+        for (AdJinjuInfo jinjuInfo : list) {
+            PropertieUtils.conversionCode(jinjuInfo, jedisPool);
+        }
 
         return list;
     }
@@ -77,5 +86,18 @@ public class AdJinjuService {
         }
 
         jinjuService.createJinju(jinju, userId);
+    }
+
+    /**
+     * 删除
+     * @param id
+     */
+    public void delete(int id) {
+
+        Integer affectRows  = jinjuDao.delete(id);
+
+        if(affectRows!=null && affectRows==0) {
+            throw new CustomException("id不存在!");
+        }
     }
 }

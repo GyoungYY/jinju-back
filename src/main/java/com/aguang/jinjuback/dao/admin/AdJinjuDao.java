@@ -20,7 +20,7 @@ public interface AdJinjuDao {
      * 获取列表信息
      * @return
      */
-    @Select("select * from ad_jinju t where t.is_delete=0 order by t.audit_status, t.id desc limit #{m},#{n}")
+    @Select("select * from ad_jinju t where t.is_delete=0 and t.audit_status=0 order by t.audit_status, t.id desc limit #{m},#{n}")
     ArrayList<AdJinjuInfo> listByPage(@Param("m") int m, @Param("n") int n);
 
     @Select("select * from ad_jinju where id = #{id} ")
@@ -28,4 +28,7 @@ public interface AdJinjuDao {
 
     @Update("update ad_jinju set audit_status=1 where id = #{id} ")
     Integer auditAdJinju(Integer id);
+
+    @Update("update ad_jinju set is_delete=1 where id = #{id} ")
+    Integer delete(Integer id);
 }

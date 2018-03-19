@@ -1,5 +1,7 @@
 package com.aguang.jinjuback.pojo.admin;
 
+import com.aguang.jinjuback.utils.CodomainField;
+
 /**
  * 后台金句(爬虫)
  */
@@ -9,7 +11,8 @@ public class AdJinjuInfo {
     private Integer id;
 
     /* 来源 */
-    private Integer source;
+    @CodomainField(name = "ADMIN_JINJU_SOURCE")
+    private String source;
 
     /* 内容 */
     private String content;
@@ -31,11 +34,11 @@ public class AdJinjuInfo {
         this.id = id;
     }
 
-    public Integer getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(Integer source) {
+    public void setSource(String source) {
         this.source = source;
     }
 

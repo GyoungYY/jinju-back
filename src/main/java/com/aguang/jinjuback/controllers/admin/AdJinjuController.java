@@ -5,10 +5,7 @@ import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.admin.AdJinjuInfo;
 import com.aguang.jinjuback.services.admin.AdJinjuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,7 +44,7 @@ public class AdJinjuController extends BaseController {
      * @param id
      * @return
      */
-    @GetMapping("/audit")
+    @PostMapping("/audit")
     public Result audit(@RequestParam(value = "id") int id, @RequestParam(value = "type") int type) {
         Result result = new Result();
 
@@ -55,6 +52,27 @@ public class AdJinjuController extends BaseController {
             jinjuService.auditJinju(id, type);
 
             result.setSuccess("审核成功!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setError(e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
+     * 驳回后台金句
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete")
+    public Result delete(@RequestParam(value = "id") int id) {
+        Result result = new Result();
+
+        try {
+            jinjuService.delete(id);
+
+            result.setSuccess("删除成功!");
         } catch (Exception e) {
             e.printStackTrace();
             result.setError(e.getMessage());
