@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.utils;
 
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -92,7 +93,44 @@ public class PropertieUtils {
     /**
      *  转值域
      */
-    public static void conversionCode(Object object, JedisPool jedisPool) {
+    public static void conversionCode(Object object) {
+
+        StringRedisTemplate redisTemplate = SpringUtils.getBean("stringRedisTemplate");
+
+        try {
+            Class class1 = object.getClass();
+
+            Field[] fields = class1.getDeclaredFields();
+
+            for (Field field : fields) {
+                CodomainField anno = field.getAnnotation(CodomainField.class);
+                if (anno != null) {
+
+                    field.setAccessible(true);
+                    Object fieldValue = field.get(object);
+
+                    if(fieldValue == null) {
+                        return;
+                    }
+
+                    String hget = (String) redisTemplate.boundHashOps(anno.name()).get(fieldValue.toString());
+
+                    field.set(object, hget);
+//                String str = (String)stringRedisTemplate.boundHashOps(anno.name()).get("1");
+//                System.out.println(str);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     *  转值域
+     */
+    public static void conversionCode2(Object object) {
+
+        JedisPool jedisPool = SpringUtils.getBean("jedisPool");
 
         Jedis jedis = null;
         try {

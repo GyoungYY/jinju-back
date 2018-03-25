@@ -4,6 +4,7 @@ import com.aguang.jinjuback.configuration.CustomException;
 import com.aguang.jinjuback.dao.admin.AdJinjuDao;
 import com.aguang.jinjuback.model.Jinju;
 import com.aguang.jinjuback.pojo.admin.AdJinjuInfo;
+import com.aguang.jinjuback.pojo.common.PageInfo;
 import com.aguang.jinjuback.pojo.constants.JinjuTypeConstant;
 import com.aguang.jinjuback.services.AreaInfoService;
 import com.aguang.jinjuback.services.JinjuService;
@@ -13,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class AdJinjuService {
@@ -29,25 +28,27 @@ public class AdJinjuService {
     @Autowired
     private JinjuService jinjuService;
 
-    @Autowired
-    private JedisPool jedisPool;
-
     /**
      * 查询列表
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    public List<AdJinjuInfo> getJinjuList(int pageIndex, int pageSize) {
+    public PageInfo<AdJinjuInfo> getJinjuList(int pageIndex, int pageSize) {
         Integer m = (pageIndex - 1) * pageSize;
+
+        Integer total = jinjuDao.getListCount();
 
         ArrayList<AdJinjuInfo> list = jinjuDao.listByPage(m, pageSize);
 
+        PageInfo<AdJinjuInfo> pageInfo = new PageInfo(total, list);
+
         for (AdJinjuInfo jinjuInfo : list) {
-            PropertieUtils.conversionCode(jinjuInfo, jedisPool);
+            // 值域处理
+            PropertieUtils.conversionCode(jinjuInfo);
         }
 
-        return list;
+        return pageInfo;
     }
 
     /**

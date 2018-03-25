@@ -7,7 +7,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URL;
 
-public class SpiderUtils {
+public class HtmlUtils {
 
     /**
      * 根据url从网络获取网页文本

@@ -16,6 +16,9 @@ public interface AdJinjuDao {
     @Select("select count(1) from ad_jinju where content = #{content} ")
     Integer getAdJinjuByContent(String content);
 
+    @Select("SELECT COUNT(1) FROM ad_jinju t where t.is_delete=0 and t.audit_status=0 ")
+    Integer getListCount();
+
     /**
      * 获取列表信息
      * @return
@@ -31,4 +34,5 @@ public interface AdJinjuDao {
 
     @Update("update ad_jinju set is_delete=1 where id = #{id} ")
     Integer delete(Integer id);
+
 }

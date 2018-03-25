@@ -9,10 +9,12 @@ spring:
     password: geeklab20*
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-
-    jpa:
-      hibernate:
-        show-sql: true
+  jpa:
+    hibernate:
+      show-sql: true
+  redis:
+    host: 47.100.177.183
+    port: 8936
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -40,4 +42,7 @@ logging:
     spring:
       springboot:
         dao: DEBUG
+
+#spring.redis.host=192.168.22.221
+#spring.redis.port=6379
 

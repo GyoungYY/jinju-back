@@ -4,7 +4,7 @@ import com.aguang.jinjuback.dao.admin.AdJinjuDao;
 import com.aguang.jinjuback.pojo.constants.AdJinjuSourceConstant;
 import com.aguang.jinjuback.services.AreaInfoService;
 import com.aguang.jinjuback.utils.DateUtils;
-import com.aguang.jinjuback.utils.SpiderUtils;
+import com.aguang.jinjuback.utils.HtmlUtils;
 import com.aguang.jinjuback.utils.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -31,7 +31,7 @@ public class SpiderService {
      */
     public void doNeihan() {
         // 抓取网页
-        Document document = SpiderUtils.getHtmlTextByUrl(NEIHAN_URL, "UTF-8");
+        Document document = HtmlUtils.getHtmlTextByUrl(NEIHAN_URL, "UTF-8");
 
         // 解析标签
         Elements elements = document.select("h1[class='title']");
@@ -58,7 +58,7 @@ public class SpiderService {
 
         for (int i = 1; i <= 10; i++) {
             // 抓取网页
-            Document document = SpiderUtils.getHtmlTextByUrl(BUDEJIE_URL + i, "UTF-8");
+            Document document = HtmlUtils.getHtmlTextByUrl(BUDEJIE_URL + i, "UTF-8");
 
             // 解析标签
             Elements elements = document.select("div[class='j-r-list-c-desc']");

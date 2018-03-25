@@ -21,12 +21,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 @ServerEndpoint(value = "/chatsocket/{userId}")
 @Component
 public class ChatWebSocket {
 
-    public static final String VISITOR_PHOTO = "http://p2g5cb64g.bkt.clouddn.com/FqzcOdtAM96-Fe3ssizwDpMVCbiD";
+    public static final String QINIU = "http://p2g5cb64g.bkt.clouddn.com/";
+
+    public static final String[] VISITOR_PHOTO =
+            new String[]{"photo2.jpeg",
+                    "photo1.jpeg",
+                    "photo0.jpeg",
+                    "dad129abd9170a9f!400x400_big.jpg",
+                    "d87aa2da62deb3a0!400x400_big (1).png",
+                    "a76aef6e4ff55a74!400x400_big.jpg",
+                    "67f726b026ec2cf4!400x400_big.jpg",
+                    "1550c2c786d68c2e!400x400_big.jpg",
+                    "7a349c934a17270e!400x400_big.jpg",
+                    "FqzcOdtAM96-Fe3ssizwDpMVCbiD",
+    };
 
 //    @Autowired
 //    private UserService userService;
@@ -62,7 +74,7 @@ public class ChatWebSocket {
         if(user1 == null) {
             chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(VISITOR_PHOTO);
+            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
             chatMessage.setMessage("游客"+userId+" 进入了聊天室...");
         } else {
             chatMessage.setIsVisitor(false);
@@ -129,7 +141,7 @@ public class ChatWebSocket {
         if(currentUser == null) {
             chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(VISITOR_PHOTO);
+            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
         } else {
             chatMessage.setIsVisitor(false);
             chatMessage.setUsername(currentUser.getUsername());
@@ -185,7 +197,7 @@ public class ChatWebSocket {
         if(user1 == null) {
             chatMessage.setIsVisitor(true);
             chatMessage.setUsername("游客" + userId);
-            chatMessage.setPhotoUrl(VISITOR_PHOTO);
+            chatMessage.setPhotoUrl(getVisitorPhoto(userId));
             chatMessage.setMessage("游客"+userId+" 离开了聊天室...");
         } else {
             chatMessage.setIsVisitor(false);
@@ -302,7 +314,7 @@ public class ChatWebSocket {
             if(currentUser == null) {
                 chatUser.setIsVisitor(true);
                 chatUser.setUsername("游客" + userId2);
-                chatUser.setPhotoUrl(VISITOR_PHOTO);
+                chatUser.setPhotoUrl(getVisitorPhoto(userId2));
             } else {
                 chatUser.setIsVisitor(false);
                 chatUser.setUsername(currentUser.getUsername());
@@ -361,6 +373,15 @@ public class ChatWebSocket {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 获取游客头像图片
+     * @param userId
+     * @return
+     */
+    private String getVisitorPhoto(String userId) {
+        return QINIU + VISITOR_PHOTO[userId.hashCode() % (VISITOR_PHOTO.length) ];
     }
 
 }
