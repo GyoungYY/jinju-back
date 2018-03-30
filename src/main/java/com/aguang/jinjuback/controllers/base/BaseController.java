@@ -1,5 +1,6 @@
 package com.aguang.jinjuback.controllers.base;
 
+import com.aguang.jinjuback.utils.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -14,6 +15,9 @@ public class BaseController {
     public Integer getUserId() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if(StringUtils.isBlank(userId)) {
+            userId = 333;
+        }
         return userId;
     }
 

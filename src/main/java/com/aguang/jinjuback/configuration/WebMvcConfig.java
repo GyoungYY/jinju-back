@@ -1,6 +1,5 @@
 package com.aguang.jinjuback.configuration;
 
-import com.aguang.jinjuback.interceptor.AccessTokenVerifyInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
