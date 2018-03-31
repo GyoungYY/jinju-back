@@ -5,8 +5,6 @@ import com.aguang.jinjuback.model.Product;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.common.PageInfo;
 import com.aguang.jinjuback.services.shop.ProductService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +17,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/product")
 public class ProductController extends BaseController {
-
-    public final static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
     private ProductService productService;
@@ -39,6 +35,25 @@ public class ProductController extends BaseController {
         try {
             PageInfo<Product> list = productService.list(pageIndex, pageSize, getUserId());
             result.setSuccess(list, "数据获取成功!");
+        } catch (Exception ex) {
+            logger.error("错误", ex);
+            result.setError("操作失败");
+        }
+        return result;
+    }
+
+    /**
+     * 查看
+     * @param id
+     * @return
+     */
+    @GetMapping("/get/{id}")
+    public Result list(@PathVariable("id") Integer id) {
+        Result result = new Result();
+
+        try {
+            Product product = productService.get(id);
+            result.setSuccess(product, "数据获取成功!");
         } catch (Exception ex) {
             logger.error("错误", ex);
             result.setError("操作失败");

@@ -5,8 +5,6 @@ import com.aguang.jinjuback.model.Shop;
 import com.aguang.jinjuback.pojo.Result;
 import com.aguang.jinjuback.pojo.common.PageInfo;
 import com.aguang.jinjuback.services.shop.ShopService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +17,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/shop")
 public class ShopController extends BaseController {
-
-    public final static Logger logger = LoggerFactory.getLogger(ShopController.class);
 
     @Autowired
     private ShopService shopService;

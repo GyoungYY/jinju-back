@@ -90,6 +90,21 @@ public class ProductService {
     }
 
     /**
+     * 查看
+     * @param productId
+     * @return
+     */
+    public Product get(Integer productId) {
+        Product product = productDao.getOne(productId);
+
+        if(product == null) {
+            throw new CustomException("该商品Id不存在!");
+        }
+
+        return product;
+    }
+
+    /**
      * 审核
      * @param productId
      * @param userId
